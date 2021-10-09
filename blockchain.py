@@ -95,7 +95,7 @@ class Blockchain(object):
             block = chain[current_index]
             print(f'{last_block}')
             print(f'{block}')
-            print("\n-----------\n")
+            print('\n-----------\n')
             # Check that the hash of the block is correct
             if block['previous_hash'] != self.hash(last_block):
                 return False
@@ -165,4 +165,4 @@ class Blockchain(object):
 
         guess = f'{last_proof}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:4] == "0000"
+        return guess_hash[:4] == '0000'
