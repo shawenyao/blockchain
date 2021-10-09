@@ -1,7 +1,7 @@
 from uuid import uuid4
 from flask import *
 from blockchain import Blockchain
-
+import sys
 
 # Instantiate our Node
 app = Flask(__name__)
@@ -99,4 +99,9 @@ def full_chain():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    if(len(sys.argv) == 1):
+        port = 5000
+    else:
+        port = sys.argv[1]
+    
+    app.run(host='0.0.0.0', port=port)
