@@ -32,7 +32,7 @@ def mine():
     block = blockchain.new_block(proof, previous_hash)
 
     response = {
-        'message': "New Block Forged",
+        'message': "New block forged",
         'index': block['index'],
         'transactions': block['transactions'],
         'proof': block['proof'],
@@ -52,7 +52,7 @@ def register_nodes():
         blockchain.register_node(node)
 
     response = {
-        'message': 'New nodes have been added',
+        'message': 'New nodes added',
         'total_nodes': list(blockchain.nodes),
     }
     return jsonify(response), 201
@@ -63,7 +63,7 @@ def consensus():
 
     if replaced:
         response = {
-            'message': 'Our chain was replaced',
+            'message': 'Our chain has been replaced',
             'new_chain': blockchain.chain
         }
     else:
