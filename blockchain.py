@@ -3,6 +3,7 @@ import json
 from time import time
 from urllib.parse import urlparse
 import requests
+import numpy as np
 
 
 class Blockchain(object):
