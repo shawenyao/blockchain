@@ -65,7 +65,7 @@ class Blockchain(object):
         :return: <int>
         """
 
-        proof = 0
+        proof = np.random.randint(2147483647)
         while self.valid_proof(last_proof, proof) is False:
             proof += 1
 
