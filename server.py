@@ -20,9 +20,9 @@ def mine():
     proof = blockchain.proof_of_work(last_proof)
 
     # We must receive a reward for finding the proof.
-    # The sender is "0" to signify that this node has mined a new coin.
+    # The sender is '0' to signify that this node has mined a new coin.
     blockchain.new_transaction(
-        sender="0",
+        sender='0',
         recipient=node_identifier,
         amount=1,
     )
@@ -32,7 +32,7 @@ def mine():
     block = blockchain.new_block(proof, previous_hash)
 
     response = {
-        'message': "New block forged",
+        'message': 'New block forged',
         'index': block['index'],
         'transactions': block['transactions'],
         'proof': block['proof'],
@@ -46,7 +46,7 @@ def register_nodes():
 
     nodes = values.get('nodes')
     if nodes is None:
-        return "Error: Please supply a valid list of nodes", 400
+        return 'Error: Please supply a valid list of nodes', 400
 
     for node in nodes:
         blockchain.register_node(node)
