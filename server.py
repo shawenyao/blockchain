@@ -93,6 +93,7 @@ def new_transaction():
 def full_chain():
     response = {
         'chain': blockchain.chain,
+        'node_identifier': node_identifier,
         'length': len(blockchain.chain),
     }
     return jsonify(response), 200
