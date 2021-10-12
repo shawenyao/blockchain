@@ -16,7 +16,7 @@ class Blockchain(object):
 
     def utxo(self):
         """
-        Calculate balance for each address
+        Calculate balance for each address from transaction history
         :return: <dict> unspent transaction output
         """
         balances = {}
