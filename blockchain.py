@@ -3,8 +3,7 @@ import json
 from time import time
 from urllib.parse import urlparse
 import requests
-import numpy as np
-
+import random
 
 class Blockchain(object):
     def __init__(self):
@@ -87,7 +86,7 @@ class Blockchain(object):
         :return: <int>
         """
 
-        proof = np.random.randint(2147483647)
+        proof = random.randint(0, 2147483647)
         while self.valid_proof(last_proof, proof) is False:
             proof += 1
 
