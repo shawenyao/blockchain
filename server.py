@@ -98,6 +98,13 @@ def full_chain():
     }
     return jsonify(response), 200
 
+@app.route('/utxo', methods=['GET'])
+def utxo():
+    response = {
+        'balances': blockchain.utxo(),
+        'node_identifier': node_identifier
+    }
+    return jsonify(response), 200
 
 if __name__ == '__main__':
     if(len(sys.argv) == 1):
