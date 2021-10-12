@@ -15,6 +15,27 @@ class Blockchain(object):
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
 
+    def utxo(self):
+        """
+        Calculate balance for each address
+        :return: <dict> unspent transaction output
+        """
+        balances = {}
+
+        for block in self.chain:
+            for transaction in block['transactions']:
+                if transaction['recipient'] in balances.keys():
+                    balances[transaction['recipient']] += transaction['amount']
+                else:
+                    balances[transaction['recipient']] = transaction['amount']
+                
+                if transaction['sender'] in balances.keys():
+                    balances[transaction['sender']] -= transaction['amount']
+                else:
+                    balances[transaction['sender']] = -transaction['amount']
+        
+        return balances
+
     def new_block(self, proof, previous_hash=None):
         """
         Create a new Block in the Blockchain
