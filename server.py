@@ -116,4 +116,5 @@ if __name__ == '__main__':
 
     logger = logging.getLogger('waitress')
     logger.setLevel(logging.DEBUG)
+    
     serve(app, host="0.0.0.0", port=port)
