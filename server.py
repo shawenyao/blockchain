@@ -2,6 +2,7 @@ from uuid import uuid4
 from flask import *
 from blockchain import Blockchain
 from waitress import serve
+import logging
 import sys
 
 # Instantiate our Node
@@ -112,5 +113,7 @@ if __name__ == '__main__':
         port = 5000
     else:
         port = sys.argv[1]
-    
+
+    logger = logging.getLogger('waitress')
+    logger.setLevel(logging.DEBUG)
     serve(app, host="0.0.0.0", port=port)
