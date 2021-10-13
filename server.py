@@ -1,6 +1,7 @@
 from uuid import uuid4
 from flask import *
 from blockchain import Blockchain
+from waitress import serve
 import sys
 
 # Instantiate our Node
@@ -112,4 +113,4 @@ if __name__ == '__main__':
     else:
         port = sys.argv[1]
     
-    app.run(host='0.0.0.0', port=port)
+    serve(app, host="0.0.0.0", port=port)
