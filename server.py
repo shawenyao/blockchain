@@ -1,3 +1,4 @@
+import hashlib
 from uuid import uuid4
 from flask import *
 from blockchain import Blockchain
@@ -30,7 +31,8 @@ def mine():
     )
 
     # Forge the new Block by adding it to the chain
-    previous_hash = blockchain.hash(last_block)
+    # previous_hash = blockchain.hash(last_block)
+    previous_hash = hashlib.sha256(f'{last_proof}{proof}'.encode()).hexdigest()
     block = blockchain.new_block(proof, previous_hash)
 
     response = {
