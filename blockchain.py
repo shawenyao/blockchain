@@ -48,8 +48,9 @@ class Blockchain(object):
             'timestamp': time(),
             'transactions': self.current_transactions,
             'proof': proof,
-            'previous_hash': previous_hash or self.hash(self.chain[-1]),
+            'previous_hash': previous_hash
         }
+        block['hash'] = self.hash(block)
 
         # Reset the current list of transactions
         self.current_transactions = []
