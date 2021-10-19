@@ -167,7 +167,8 @@ class Blockchain(object):
     
     @staticmethod
     def starts_with_zeros(string):
-        return string[:3] == '000'
+        difficulty = 3
+        return string[:difficulty] == '0' * difficulty
 
     @staticmethod
     def hash(block_content):
