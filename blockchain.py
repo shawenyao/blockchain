@@ -56,7 +56,7 @@ class Blockchain(object):
         # set the nonce given by the proof of work algorithm
         self.tentative_block['block']['nonce'] = nonce
         # hash the new block
-        self.tentative_block['hash'] = self.hash(self.tentative_block)
+        self.tentative_block['hash'] = self.hash(self.tentative_block['block'])
 
         # add to the chain
         self.chain.append(self.tentative_block)
