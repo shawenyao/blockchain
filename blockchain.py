@@ -29,7 +29,7 @@ class Blockchain(object):
         balances = {}
 
         for block in self.chain:
-            for transaction in block['transactions']:
+            for transaction in block['block']['transactions']:
                 # if address is already there, add the amount of the original balance
                 # else, create new entry and record the amount
                 # for recipient:
