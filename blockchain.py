@@ -6,13 +6,15 @@ import requests
 import random
 
 class Blockchain(object):
-    def __init__(self):
+    def __init__(self, node_identifier):
+        self.node_identifier = node_identifier
         self.current_transactions = []
         self.chain = []
+        self.tentative_block = {}
         self.nodes = set()
 
         # Create the genesis block
-        self.new_block(previous_hash=1, proof=100)
+        self.proof_of_work(previous_hash='0000')
 
     def utxo(self):
         """
@@ -35,62 +37,58 @@ class Blockchain(object):
         
         return balances
 
-    def new_block(self, proof, previous_hash=None):
+    def new_block(self, nonce):
         """
         Create a new Block in the Blockchain
-        :param proof: <int> The proof given by the Proof of Work algorithm
+        :param nonce: <int> The nonce given by the nonce of Work algorithm
         :param previous_hash: (Optional) <str> Hash of previous Block
         :return: <dict> New Block
         """
 
-        block = {
-            'index': len(self.chain) + 1,
-            'timestamp': time(),
-            'transactions': self.current_transactions,
-            'proof': proof,
-            'previous_hash': previous_hash or self.hash(self.chain[-1]),
-        }
+        # hash the new block
+        self.tentative_block['nonce'] = nonce
+        self.tentative_block['hash'] = self.hash(self.tentative_block)
+
+        self.chain.append(self.tentative_block)
 
         # Reset the current list of transactions
         self.current_transactions = []
+        self.tentative_block = {}        
 
-        self.chain.append(block)
-        return block
+        return self.last_block
 
-    def new_transaction(self, sender, recipient, amount):
-        """
-        Creates a new transaction to go into the next mined Block
-        :param sender: <str> Address of the Sender
-        :param recipient: <str> Address of the Recipient
-        :param amount: <int> Amount
-        :return: <int> The index of the Block that will hold this transaction
-        """
-        self.current_transactions.append({
-            'sender': sender,
-            'recipient': recipient,
-            'amount': amount,
-        })
-
-        return self.last_block['index'] + 1
-
-    @property
-    def last_block(self):
-        return self.chain[-1]
-
-    def proof_of_work(self, last_proof):
+    def proof_of_work(self, previous_hash=None):
         """
         Simple Proof of Work Algorithm:
          - Find a number p' such that hash(pp') contains leading 4 zeroes, where
-         - p is the previous proof, and p' is the new proof
-        :param last_proof: <int>
+         - p is the previous nonce, and p' is the new nonce
+        :param last_nonce: <int>
         :return: <int>
         """
 
-        proof = random.randint(0, 2147483647)
-        while self.valid_proof(last_proof, proof) is False:
-            proof += 1
+        # block reward
+        reward = {
+            'sender': '0',
+            'recipient': self.node_identifier,
+            'amount': 1
+        }
 
-        return proof
+        self.tentative_block = {
+            'index': len(self.chain) + 1,
+            'timestamp': time(),
+            'transactions': self.current_transactions.copy() + [reward],
+            'nonce': 0,
+            'previous_hash': previous_hash or self.last_block['hash'],
+            'hash': ''
+        }
+        
+        nonce = random.randint(0, 2147483647)
+        while self.valid_proof(self.tentative_block, nonce) is False:
+            nonce += 1
+
+        block = self.new_block(nonce)
+
+        return block
 
     def register_node(self, address):
         """
@@ -109,17 +107,18 @@ class Blockchain(object):
         :return: <bool> True if valid, False if not
         """
 
-        last_block = chain[0]
+        last_block = chain[0].copy()
+        last_block['hash'] = ''
         current_index = 1
 
         while current_index < len(chain):
-            block = chain[current_index]
+            block = chain[current_index].copy()
             # Check that the hash of the block is correct
             if block['previous_hash'] != self.hash(last_block):
                 return False
 
             # Check that the Proof of Work is correct
-            if not self.valid_proof(last_block['proof'], block['proof']):
+            if not self.valid_proof(block, block['nonce']):
                 return False
 
             last_block = block
@@ -168,19 +167,41 @@ class Blockchain(object):
         :return: <str>
         """
 
+        block_copy = block.copy()
+        block_copy['hash'] = ''
         # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
-        block_string = json.dumps(block, sort_keys=True).encode()
+        block_string = json.dumps(block_copy, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 
     @staticmethod
-    def valid_proof(last_proof, proof):
+    def valid_proof(block, nonce):
         """
-        Validates the Proof: Does hash(last_proof, proof) contain 4 leading zeroes?
-        :param last_proof: <int> Previous Proof
-        :param proof: <int> Current Proof
+        Validates the nonce: Does hash(last_nonce, nonce) contain 4 leading zeroes?
+        :param last_nonce: <int> Previous nonce
+        :param nonce: <int> Current nonce
         :return: <bool> True if correct, False if not.
         """
-
-        guess = f'{last_proof}{proof}'.encode()
-        guess_hash = hashlib.sha256(guess).hexdigest()
+        block_copy = block.copy()
+        block_copy['nonce'] = nonce
+        guess_hash = Blockchain.hash(block_copy)
         return guess_hash[:4] == '0000'
+
+    def new_transaction(self, sender, recipient, amount):
+        """
+        Creates a new transaction to go into the next mined Block
+        :param sender: <str> Address of the Sender
+        :param recipient: <str> Address of the Recipient
+        :param amount: <int> Amount
+        :return: <int> The index of the Block that will hold this transaction
+        """
+        self.current_transactions.append({
+            'sender': sender,
+            'recipient': recipient,
+            'amount': amount,
+        })
+
+        return self.last_block['index'] + 1
+
+    @property
+    def last_block(self):
+        return self.chain[-1]
