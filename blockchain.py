@@ -201,7 +201,7 @@ class Blockchain(object):
             'amount': amount,
         })
 
-        return self.last_block['index'] + 1
+        return self.last_block['block']['index'] + 1
     
     @staticmethod
     def valid_proof(block, nonce):
