@@ -56,7 +56,7 @@ class Blockchain(object):
         # set the nonce given by the proof of work algorithm
         self.tentative_block['block']['nonce'] = nonce
         # hash the new block
-        self.tentative_block['hash'] = self.hash(self.tentative_block['block'])
+        self.tentative_block['hash'] = Blockchain.hash(self.tentative_block['block'])
 
         # add to the chain
         self.chain.append(self.tentative_block)
@@ -99,7 +99,7 @@ class Blockchain(object):
         
         # find the nonce such that hash(block(nonce)) contains several leading zeros
         nonce = random.randint(0, 2147483647)
-        while self.valid_proof(self.tentative_block, nonce) is False:
+        while Blockchain.valid_proof(self.tentative_block, nonce) is False:
             nonce += 1
 
         # after finding the solution, add the block to chain
@@ -116,32 +116,6 @@ class Blockchain(object):
         parsed_url = urlparse(address)
         self.nodes.add(parsed_url.netloc)
 
-    def valid_chain(self, chain):
-        """
-        determine if a given blockchain is valid
-        :param chain: <list> A blockchain
-        :return: <bool> True if valid, False if not
-        """
-
-        # start from the 1st block
-        current_index = 0
-
-        while current_index < len(chain):
-            block = chain[current_index]
-
-            # Check that the hash of the block is correct
-            if block['hash'] != self.hash(block['block']):
-                return False
-
-            # Check that the Proof of Work is correct block['hash'][:4] != '0000'
-            if not self.starts_with_zeros(block['hash']):
-                return False
-
-            # move on to the next block
-            current_index += 1
-
-        return True
-
     def resolve_conflicts(self):
         """
         the consensus algorithm, it resolves conflicts
@@ -152,10 +126,10 @@ class Blockchain(object):
         neighbours = self.nodes
         new_chain = None
 
-        # We're only looking for chains longer than ours
+        # we're only looking for chains longer than ours
         max_length = len(self.chain)
 
-        # Grab and verify the chains from all the nodes in our network
+        # grab and verify the chains from all the nodes in our network
         for node in neighbours:
             response = requests.get(f'http://{node}/chain')
 
@@ -164,11 +138,11 @@ class Blockchain(object):
                 chain = response.json()['chain']
 
                 # Check if the length is longer and the chain is valid
-                if length > max_length and self.valid_chain(chain):
+                if length > max_length and Blockchain.valid_chain(chain):
                     max_length = length
                     new_chain = chain
 
-        # Replace our chain if we discovered a new, valid chain longer than ours
+        # replace our chain if we discovered a new, valid chain longer than ours
         if new_chain:
             self.chain = new_chain
             return True
@@ -191,6 +165,10 @@ class Blockchain(object):
 
         return self.last_block['block']['index'] + 1
     
+    @staticmethod
+    def starts_with_zeros(string):
+        return string[:4] == '0000'
+
     @staticmethod
     def hash(block_content):
         """
@@ -217,8 +195,31 @@ class Blockchain(object):
         return Blockchain.starts_with_zeros(guess_hash)
     
     @staticmethod
-    def starts_with_zeros(string):
-        return string[:4] == '0000'
+    def valid_chain(chain):
+        """
+        determine if a given blockchain is valid
+        :param chain: <list> A blockchain
+        :return: <bool> True if valid, False if not
+        """
+
+        # start from the 1st block
+        current_index = 0
+
+        while current_index < len(chain):
+            block = chain[current_index]
+
+            # Check that the hash of the block is correct
+            if block['hash'] != Blockchain.hash(block['block']):
+                return False
+
+            # Check that the Proof of Work is correct block['hash'][:4] != '0000'
+            if not Blockchain.starts_with_zeros(block['hash']):
+                return False
+
+            # move on to the next block
+            current_index += 1
+
+        return True
 
     @property
     def last_block(self):
