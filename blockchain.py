@@ -11,14 +11,14 @@ class Blockchain(object):
         self.node_identifier = node_identifier
         # the dictionary of pending transactions
         self.current_transactions = []
-        # the list of blockchain
+        # the list of blocks
         self.chain = []
         # the next block to be forged but not yet finalized
         self.tentative_block = {}
         # the set of negbouring nodes
         self.nodes = set()
 
-        # Create the genesis block
+        # create the genesis block
         self.proof_of_work(previous_hash='0000')
 
     def utxo(self):
