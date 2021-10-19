@@ -111,12 +111,13 @@ class Blockchain(object):
 
         while current_index < len(chain):
             block = chain[current_index]
+            
             # Check that the hash of the block is correct
             if block['hash'] != self.hash(block):
                 return False
 
             # Check that the Proof of Work is correct block['hash'][:4] != '0000'
-            if not self.leading_zeros(block['hash']):
+            if not self.starts_with_zeros(block['hash']):
                 return False
 
             last_block = block
@@ -200,10 +201,10 @@ class Blockchain(object):
         block_copy = block.copy()
         block_copy['nonce'] = nonce
         guess_hash = Blockchain.hash(block_copy)
-        return Blockchain.leading_zeros(guess_hash)
+        return Blockchain.starts_with_zeros(guess_hash)
     
     @staticmethod
-    def leading_zeros(string):
+    def starts_with_zeros(string):
         return string[:4] == '0000'
 
     @property
