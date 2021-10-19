@@ -21,10 +21,10 @@ def mine():
 
     response = {
         'message': 'New block forged',
-        'index': block['index'],
-        'transactions': block['transactions'],
-        'nonce': block['nonce'],
-        'previous_hash': block['previous_hash'],
+        'index': block['block']['index'],
+        'transactions': block['block']['transactions'],
+        'nonce': block['block']['nonce'],
+        'previous_hash': block['block']['previous_hash'],
         'hash': block['hash']
     }
     return jsonify(response), 200
