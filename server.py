@@ -12,33 +12,20 @@ app = Flask(__name__)
 node_identifier = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
-blockchain = Blockchain()
+blockchain = Blockchain(node_identifier)
 
 @app.route('/mine', methods=['GET'])
 def mine():
-    # We run the proof of work algorithm to get the next proof...
-    last_block = blockchain.last_block
-    last_proof = last_block['proof']
-    proof = blockchain.proof_of_work(last_proof)
-
-    # We must receive a reward for finding the proof.
-    # The sender is '0' to signify that this node has mined a new coin.
-    blockchain.new_transaction(
-        sender='0',
-        recipient=node_identifier,
-        amount=1,
-    )
-
-    # Forge the new Block by adding it to the chain
-    previous_hash = blockchain.hash(last_block)
-    block = blockchain.new_block(proof, previous_hash)
+    # We run the proof of work algorithm to get the next nonce...
+    block = blockchain.proof_of_work()
 
     response = {
         'message': 'New block forged',
         'index': block['index'],
         'transactions': block['transactions'],
-        'proof': block['proof'],
+        'nonce': block['nonce'],
         'previous_hash': block['previous_hash'],
+        'hash': block['hash']
     }
     return jsonify(response), 200
 
@@ -65,13 +52,11 @@ def consensus():
 
     if replaced:
         response = {
-            'message': 'Our chain has been replaced',
-            'new_chain': blockchain.chain
+            'message': 'Our chain has been replaced'
         }
     else:
         response = {
-            'message': 'Our chain is authoritative',
-            'chain': blockchain.chain
+            'message': 'Our chain is authoritative'
         }
 
     return jsonify(response), 200
@@ -95,7 +80,7 @@ def new_transaction():
 def full_chain():
     response = {
         'chain': blockchain.chain,
-        'node_identifier': node_identifier,
+        'node_identifier': blockchain.node_identifier,
         'length': len(blockchain.chain),
     }
     return jsonify(response), 200
@@ -104,7 +89,7 @@ def full_chain():
 def utxo():
     response = {
         'balances': blockchain.utxo(),
-        'node_identifier': node_identifier
+        'node_identifier': blockchain.node_identifier
     }
     return jsonify(response), 200
 
