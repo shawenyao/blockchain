@@ -166,6 +166,8 @@ class Blockchain(object):
         """
 
         block_copy = block.copy()
+
+        # remove hash of the block to re-caculate the hash of the block
         block_copy['hash'] = ''
         # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
         block_string = json.dumps(block_copy, sort_keys=True).encode()
