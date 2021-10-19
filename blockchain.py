@@ -38,7 +38,7 @@ class Blockchain(object):
                 else:
                     balances[transaction['recipient']] = transaction['amount']
                 
-                # for sender
+                # for sender:
                 if transaction['sender'] in balances.keys():
                     balances[transaction['sender']] -= transaction['amount']
                 else:
