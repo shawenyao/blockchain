@@ -175,18 +175,6 @@ class Blockchain(object):
 
         return False
 
-    @staticmethod
-    def hash(block_content):
-        """
-        creates a SHA-256 hash of a Block
-        :param block: <dict> Block
-        :return: <str>
-        """
-
-        # the dictionary must be ordered, or we'll have inconsistent hashes
-        block_string = json.dumps(block_content, sort_keys=True).encode()
-        return hashlib.sha256(block_string).hexdigest()
-
     def new_transaction(self, sender, recipient, amount):
         """
         creates a new transaction to go into the next mined block
@@ -203,6 +191,18 @@ class Blockchain(object):
 
         return self.last_block['block']['index'] + 1
     
+    @staticmethod
+    def hash(block_content):
+        """
+        creates a SHA-256 hash of a Block
+        :param block: <dict> Block
+        :return: <str>
+        """
+
+        # the dictionary must be ordered, or we'll have inconsistent hashes
+        block_string = json.dumps(block_content, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()
+
     @staticmethod
     def valid_proof(block, nonce):
         """
