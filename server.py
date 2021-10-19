@@ -20,7 +20,7 @@ def mine():
     block = blockchain.proof_of_work()
 
     response = {
-        'message': 'New block forged',
+        'message': 'new block forged',
         'index': block['block']['index'],
         'transactions': block['block']['transactions'],
         'nonce': block['block']['nonce'],
@@ -35,13 +35,13 @@ def register_nodes():
 
     nodes = values.get('nodes')
     if nodes is None:
-        return 'Error: Please supply a valid list of nodes', 400
+        return 'error: please supply a valid list of nodes', 400
 
     for node in nodes:
         blockchain.register_node(node)
 
     response = {
-        'message': 'New nodes added',
+        'message': 'new nodes added',
         'total_nodes': list(blockchain.nodes),
     }
     return jsonify(response), 201
@@ -52,11 +52,11 @@ def consensus():
 
     if replaced:
         response = {
-            'message': 'Our chain has been replaced'
+            'message': 'our chain has been replaced'
         }
     else:
         response = {
-            'message': 'Our chain is authoritative'
+            'message': 'our chain is authoritative'
         }
 
     return jsonify(response), 200
@@ -73,7 +73,7 @@ def new_transaction():
     # Create a new Transaction
     index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
 
-    response = {'message': f'Transaction will be added to Block {index}'}
+    response = {'message': f'transaction will be added to block {index}'}
     return jsonify(response), 201
 
 @app.route('/chain', methods=['GET'])
