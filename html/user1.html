@@ -2,7 +2,10 @@
 <html>
 
 <head>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
 <style>
 h1{
   font: 32px/35px sans-serif;
@@ -36,15 +39,15 @@ pre {
 <p>Welcome to the HBS chain.</p>
 
 <button id='blockchain'>Blockchain</button>
-<pre id='blockchain_response' style="height:400px;width:100%">
+<pre id='blockchain_response' style="height:400px;width:100%" class="prettyprint">
 </pre>
 
 <button id='mine'>Mine</button>
-<pre id='mine_response' style="height:100px;width:100%;">
+<pre id='mine_response' style="height:100px;width:100%;" class="prettyprint">
 </pre>
 
 <button id='balance'>Check balances</button>
-<pre id='balance_response' style="height:200px;width:100%;">
+<pre id='balance_response' style="height:200px;width:100%;" class="prettyprint">
 </pre>
 
 <button id='transact'>Transact</button>
@@ -52,15 +55,15 @@ Recipient: <input id='recipient' type="text" size="35">
 Amount: <input id='amount' type="number">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <label id="transact_error"></label>
-<pre id='transact_response' style="height:180px;width:100%;">
+<pre id='transact_response' style="height:180px;width:100%;" class="prettyprint">
 </pre>
 
 <button id='mynetwork'>My network</button>
-<pre id='mynetwork_response' style="height:200px;width:100%;">
+<pre id='mynetwork_response' style="height:200px;width:100%;" class="prettyprint">
 </pre>
 
 <button id='consensus'>Consensus</button>
-<pre id='consensus_response' style="height:85px;width:100%;">
+<pre id='consensus_response' style="height:85px;width:100%;" class="prettyprint">
 </pre>
 
 <script>
@@ -75,6 +78,8 @@ $( '#blockchain' ).click(function() {
   $.getJSON( host + ":" + port + "/chain", function( data ) {
     node_identifier = data.node_identifier;
     $( "#blockchain_response" ).text( JSON.stringify(data, null, 4) );
+    $( "#blockchain_response" ).attr('class', 'prettyprint');
+    PR.prettyPrint();
     $( '#blockchain' ).prop('disabled', false);
   });
 });
@@ -85,6 +90,8 @@ $( '#balance' ).click(function() {
     node_identifier = data.node_identifier;
     balances = data;
     $( "#balance_response" ).text( JSON.stringify(data, null, 4) );
+    $( "#balance_response" ).attr('class', 'prettyprint');
+    PR.prettyPrint();
     $( '#balance' ).prop('disabled', false);
   });
 });
@@ -116,6 +123,8 @@ $( '#transact' ).click(function() {
   })
     .done(function( data ) {
       $( "#transact_response" ).text( JSON.stringify(data, null, 4) );
+      $( "#transact_response" ).attr('class', 'prettyprint');
+      PR.prettyPrint();
       $( '#transact' ).prop('disabled', false);
     });
 });
@@ -130,6 +139,8 @@ $( '#mynetwork' ).click(function() {
   })
     .done(function( data ) {
       $( "#mynetwork_response" ).text( JSON.stringify(data, null, 4) );
+      $( "#mynetwork_response" ).attr('class', 'prettyprint');
+      PR.prettyPrint();
       $( '#mynetwork' ).prop('disabled', false);
     });
 });
@@ -138,6 +149,8 @@ $( '#mine' ).click(function() {
   $( '#mine' ).prop('disabled', true);
   $.getJSON( host + ":" + port + "/mine", function( data ) {
     $( "#mine_response" ).text( JSON.stringify(data, null, 4) );
+    $( "#mine_response" ).attr('class', 'prettyprint');
+    PR.prettyPrint();
     $( '#mine' ).prop('disabled', false);
   });
 });
@@ -146,6 +159,8 @@ $( '#consensus' ).click(function() {
   $( '#consensus' ).prop('disabled', true);
   $.getJSON( host + ":" + port + "/nodes/resolve", function( data ) {
     $( "#consensus_response" ).text( JSON.stringify(data, null, 4) );
+    $( "#consensus_response" ).attr('class', 'prettyprint');
+    PR.prettyPrint();
     $( '#consensus' ).prop('disabled', false);
   });
 });
