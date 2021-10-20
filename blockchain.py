@@ -163,7 +163,7 @@ class Blockchain(object):
             'amount': amount,
         })
 
-        return self.last_block['block']['index'] + 1
+        return self.current_transactions[-1]
     
     @staticmethod
     def starts_with_zeros(string):
