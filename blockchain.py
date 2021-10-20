@@ -154,7 +154,7 @@ class Blockchain(object):
         creates a new transaction to go into the next mined block
         :param sender: <str> address of the Sender
         :param recipient: <str> address of the recipient
-        :param amount: <int> amount
+        :param amount: <float> amount
         :return: <int> the index of the Block that will hold this transaction
         """
         self.current_transactions.append({
