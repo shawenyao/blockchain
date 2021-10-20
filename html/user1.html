@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/github-v2.min.css">
 
 <style>
+html{
+  font-family: sans-serif;
+}
+
 h1{
   font: 32px/35px sans-serif;
 }
@@ -36,7 +40,7 @@ pre.prettyprint {
 <p>Welcome to the HBS chain.</p>
 
 <button id='blockchain'>Blockchain</button>
-<pre id='blockchain_response' style="height:400px;width:100%" class="prettyprint">
+<pre id='blockchain_response' style="height:450px;width:100%" class="prettyprint">
 </pre>
 
 <button id='mine'>Mine</button>
@@ -50,8 +54,9 @@ pre.prettyprint {
 <button id='transact'>Transact</button>
 &nbsp;&nbsp;&nbsp;&nbsp;
 Recipient: <input id='recipient' type="text" size="35">
+&nbsp;&nbsp;&nbsp;&nbsp;
 Amount: <input id='amount' type="number">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;
 <label id="transact_error"></label>
 <pre id='transact_response' style="height:180px;width:100%;" class="prettyprint">
 </pre>
@@ -96,7 +101,7 @@ $( '#balance' ).click(function() {
 
 $( '#transact' ).click(function() {
   if( !node_identifier ) {
-    $( '#transact_error' ).text("Check your balance first.");
+    $( '#transact_error' ).text("Please check your balance first.");
     return;
   }
   if( !$( '#recipient' ).val() ) {
