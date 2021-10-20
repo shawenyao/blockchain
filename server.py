@@ -45,7 +45,7 @@ def register_nodes():
         })
     response.headers.add('Access-Control-Allow-Origin', '*')
 
-    return response, 201
+    return response, 200
 
 @app.route('/nodes/resolve', methods=['GET'])
 def consensus():
