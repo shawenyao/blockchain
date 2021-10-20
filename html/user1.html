@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+h1{
+  font: 32px/35px sans-serif;
+}
+
+p{
+  font: 25px/27px sans-serif;
+}
+
+label{
+  color: red;
+}
+
+button {
+  font: 15px/20px sans-serif;
+}
+
+pre {
+  border: 2px solid #ccc;
+  font: 15px/20px sans-serif;
+  overflow:auto;
+  background-color: #F8F8F8;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Hi, USER1</h1>
+
+<p>Welcome to the HBS chain.</p>
+
+<button id='blockchain'>Blockchain</button>
+<pre id='blockchain_response' style="height:400px;width:100%">
+</pre>
+
+<button id='mine'>Mine</button>
+<pre id='mine_response' style="height:100px;width:100%;">
+</pre>
+
+<button id='balance'>Check balances</button>
+<pre id='balance_response' style="height:200px;width:100%;">
+</pre>
+
+<button id='transact'>Transact</button>
+Recipient: <input id='recipient' type="text" size="35">
+Amount: <input id='amount' type="number">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<label id="transact_error"></label>
+<pre id='transact_response' style="height:180px;width:100%;">
+</pre>
+
+<button id='mynetwork'>My network</button>
+<pre id='mynetwork_response' style="height:200px;width:100%;">
+</pre>
+
+<button id='consensus'>Consensus</button>
+<pre id='consensus_response' style="height:85px;width:100%;">
+</pre>
+
+<script>
+
+const host = "http://kodi.local"
+const port = 5000;
+node_identifier = null
+balances = null
+
+$( '#blockchain' ).click(function() {
+  $( '#blockchain' ).prop('disabled', true);
+  $.getJSON( host + ":" + port + "/chain", function( data ) {
+    node_identifier = data.node_identifier;
+    $( "#blockchain_response" ).text( JSON.stringify(data, null, 4) );
+    $( '#blockchain' ).prop('disabled', false);
+  });
+});
+
+$( '#balance' ).click(function() {
+  $( '#balance' ).prop('disabled', true);
+  $.getJSON( host + ":" + port + "/utxo", function( data ) {
+    node_identifier = data.node_identifier;
+    balances = data;
+    $( "#balance_response" ).text( JSON.stringify(data, null, 4) );
+    $( '#balance' ).prop('disabled', false);
+  });
+});
+
+$( '#transact' ).click(function() {
+  if( !node_identifier ) {
+    $( '#transact_error' ).text("Check your balance first.");
+    return;
+  }
+  if( !$( '#recipient' ).val() ) {
+    $( '#transact_error' ).text("Please enter a recipient.");
+    return;
+  }
+  if( !$( '#amount' ).val() ) {
+    $( '#transact_error' ).text("Please enter an amount.");
+    return;
+  }
+  if( $( '#amount' ).val() > balances.balances[node_identifier] ) {
+    $( '#transact_error' ).text("Please enter a smaller amount.");
+    return;
+  }
+  $( '#transact_error' ).text("");
+  $( '#transact' ).prop('disabled', true);
+  $.ajax({
+    method: "POST",
+    contentType: "application/json",
+    url: host + ":" + port + "/transactions/new",
+    data: JSON.stringify({ sender: node_identifier, recipient: $('#recipient').val(), amount: $('#amount').val()})
+  })
+    .done(function( data ) {
+      $( "#transact_response" ).text( JSON.stringify(data, null, 4) );
+      $( '#transact' ).prop('disabled', false);
+    });
+});
+
+$( '#mynetwork' ).click(function() {
+  $( '#mynetwork' ).prop('disabled', true);
+  $.ajax({
+    method: "POST",
+    contentType: "application/json",
+    url: host + ":" + port + "/nodes/register",
+    data: JSON.stringify({ nodes: [] })
+  })
+    .done(function( data ) {
+      $( "#mynetwork_response" ).text( JSON.stringify(data, null, 4) );
+      $( '#mynetwork' ).prop('disabled', false);
+    });
+});
+
+$( '#mine' ).click(function() {
+  $( '#mine' ).prop('disabled', true);
+  $.getJSON( host + ":" + port + "/mine", function( data ) {
+    $( "#mine_response" ).text( JSON.stringify(data, null, 4) );
+    $( '#mine' ).prop('disabled', false);
+  });
+});
+
+$( '#consensus' ).click(function() {
+  $( '#consensus' ).prop('disabled', true);
+  $.getJSON( host + ":" + port + "/nodes/resolve", function( data ) {
+    $( "#consensus_response" ).text( JSON.stringify(data, null, 4) );
+    $( '#consensus' ).prop('disabled', false);
+  });
+});
+
+</script>
+</body>
+</html>
