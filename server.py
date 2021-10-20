@@ -19,87 +19,88 @@ def mine():
     # We run the proof of work algorithm to get the next nonce...
     block = blockchain.proof_of_work()
 
-    response = jsonify({
+    response = {
         'message': 'new block forged',
         'index': block['block']['index']
-    })
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    }
 
-    return response, 200
+    return jsonify(response), 200
 
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
     nodes = request.get_json().get('nodes')
 
     if nodes is None or len(nodes) == 0:
-        response = jsonify({
+        response = {
             'message': 'available nodes',
             'total_nodes': list(blockchain.nodes),
-        })
+        }
     else:
         for node in nodes:
             blockchain.register_node(node)
-        response = jsonify({
+        response = {
             'message': 'new nodes added',
             'total_nodes': list(blockchain.nodes),
-        })
-    response.headers.add('Access-Control-Allow-Origin', '*')
+        }
 
-    return response, 200
+    return jsonify(response), 200
 
 @app.route('/nodes/resolve', methods=['GET'])
 def consensus():
     replaced = blockchain.resolve_conflicts()
 
     if replaced:
-        response = jsonify({
+        response = {
             'message': 'our chain has been replaced'
-        })
+        }
     else:
-        response = jsonify({
+        response = {
             'message': 'our chain is authoritative'
-        })
-    response.headers.add('Access-Control-Allow-Origin', '*')
+        }
 
-    return response, 200
+    return jsonify(response), 200
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
     values = request.get_json()
 
-    # Check that the required fields are in the POST'ed data
+    # check that the required fields are in the POST'ed data
     required = ['sender', 'recipient', 'amount']
     if not all(k in values for k in required):
         return 'Missing values', 400
 
-    # Create a new Transaction
+    # create a new Transaction
     index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
 
-    response = jsonify({'message': f'transaction will be added to block {index}'})
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response = ({'message': f'transaction will be added to block {index}'})
 
-    return response, 201
+    return jsonify(response), 200
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
-    response = jsonify({
+    response = {
         'chain': blockchain.chain,
         'node_identifier': blockchain.node_identifier,
         'length': len(blockchain.chain),
-    })
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    }
 
-    return response, 200
+    return jsonify(response), 200
 
 @app.route('/utxo', methods=['GET'])
 def utxo():
-    response = jsonify({
+    response = {
         'balances': blockchain.utxo(),
         'node_identifier': blockchain.node_identifier
-    })
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    }
 
-    return response, 200
+    return jsonify(response), 200
+
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  return response
 
 if __name__ == '__main__':
     if(len(sys.argv) == 1):
