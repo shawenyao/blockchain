@@ -80,7 +80,7 @@ $( '#blockchain' ).click(function() {
   $( '#blockchain' ).prop('disabled', true);
   $.getJSON( host + ":" + port + "/chain", function( data ) {
     node_identifier = data.node_identifier;
-    $( "#blockchain_response" ).text( JSON.stringify(data, null, 4) );
+    $( "#blockchain_response" ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
     $( "#blockchain_response" ).attr('class', 'prettyprint');
     PR.prettyPrint();
     $( '#blockchain' ).prop('disabled', false);
@@ -92,7 +92,7 @@ $( '#balance' ).click(function() {
   $.getJSON( host + ":" + port + "/utxo", function( data ) {
     node_identifier = data.node_identifier;
     balances = data;
-    $( "#balance_response" ).text( JSON.stringify(data, null, 4) );
+    $( "#balance_response" ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
     $( "#balance_response" ).attr('class', 'prettyprint');
     PR.prettyPrint();
     $( '#balance' ).prop('disabled', false);
@@ -125,7 +125,7 @@ $( '#transact' ).click(function() {
     data: JSON.stringify({ sender: node_identifier, recipient: $('#recipient').val(), amount: $('#amount').val()})
   })
     .done(function( data ) {
-      $( "#transact_response" ).text( JSON.stringify(data, null, 4) );
+      $( "#transact_response" ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
       $( "#transact_response" ).attr('class', 'prettyprint');
       PR.prettyPrint();
       $( '#transact' ).prop('disabled', false);
@@ -141,7 +141,7 @@ $( '#mynetwork' ).click(function() {
     data: JSON.stringify({ nodes: [] })
   })
     .done(function( data ) {
-      $( "#mynetwork_response" ).text( JSON.stringify(data, null, 4) );
+      $( "#mynetwork_response" ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
       $( "#mynetwork_response" ).attr('class', 'prettyprint');
       PR.prettyPrint();
       $( '#mynetwork' ).prop('disabled', false);
@@ -151,7 +151,7 @@ $( '#mynetwork' ).click(function() {
 $( '#mine' ).click(function() {
   $( '#mine' ).prop('disabled', true);
   $.getJSON( host + ":" + port + "/mine", function( data ) {
-    $( "#mine_response" ).text( JSON.stringify(data, null, 4) );
+    $( "#mine_response" ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
     $( "#mine_response" ).attr('class', 'prettyprint');
     PR.prettyPrint();
     $( '#mine' ).prop('disabled', false);
@@ -161,7 +161,7 @@ $( '#mine' ).click(function() {
 $( '#consensus' ).click(function() {
   $( '#consensus' ).prop('disabled', true);
   $.getJSON( host + ":" + port + "/nodes/resolve", function( data ) {
-    $( "#consensus_response" ).text( JSON.stringify(data, null, 4) );
+    $( "#consensus_response" ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
     $( "#consensus_response" ).attr('class', 'prettyprint');
     PR.prettyPrint();
     $( '#consensus' ).prop('disabled', false);
