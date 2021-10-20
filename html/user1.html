@@ -2,7 +2,7 @@
 <html>
 
 <head>
-
+<link rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/github-v2.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 
@@ -23,17 +23,15 @@ button {
   font: 15px/20px sans-serif;
 }
 
-pre {
-  border: 2px solid #ccc;
-  font: 15px/20px sans-serif;
-  overflow:auto;
-  background-color: #F8F8F8;
+pre.prettyprint {
+  border: 2px solid #ccc !important;
+  overflow: auto;
+  background-color: #F8F8F8 !important;
 }
 </style>
 </head>
 
 <body>
-
 <h1>Hi, USER1</h1>
 
 <p>Welcome to the HBS chain.</p>
@@ -51,6 +49,7 @@ pre {
 </pre>
 
 <button id='transact'>Transact</button>
+&nbsp;&nbsp;&nbsp;&nbsp;
 Recipient: <input id='recipient' type="text" size="35">
 Amount: <input id='amount' type="number">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -164,7 +163,6 @@ $( '#consensus' ).click(function() {
     $( '#consensus' ).prop('disabled', false);
   });
 });
-
 </script>
 </body>
 </html>
