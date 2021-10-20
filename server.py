@@ -21,7 +21,8 @@ def mine():
 
     response = {
         'message': 'new block forged',
-        'index': block['block']['index']
+        'index': block['block']['index'],
+        'node_identifier': blockchain.node_identifier
     }
 
     return jsonify(response), 200
@@ -34,6 +35,7 @@ def register_nodes():
         response = {
             'message': 'available nodes',
             'total_nodes': list(blockchain.nodes),
+            'node_identifier': blockchain.node_identifier
         }
     else:
         for node in nodes:
@@ -41,6 +43,7 @@ def register_nodes():
         response = {
             'message': 'new nodes added',
             'total_nodes': list(blockchain.nodes),
+            'node_identifier': blockchain.node_identifier
         }
 
     return jsonify(response), 200
@@ -51,11 +54,13 @@ def consensus():
 
     if replaced:
         response = {
-            'message': 'our chain has been replaced'
+            'message': 'our chain has been replaced',
+            'node_identifier': blockchain.node_identifier
         }
     else:
         response = {
-            'message': 'our chain is authoritative'
+            'message': 'our chain is authoritative',
+            'node_identifier': blockchain.node_identifier
         }
 
     return jsonify(response), 200
@@ -70,9 +75,13 @@ def new_transaction():
         return 'Missing values', 400
 
     # create a new transaction
-    index = blockchain.new_transaction(values['sender'], values['recipient'], float(values['amount']))
+    transaction = blockchain.new_transaction(values['sender'], values['recipient'], float(values['amount']))
 
-    response = ({'message': f'transaction will be added to block {index}'})
+    response = {
+        'message': 'transaction will be added to the next block',
+        'transaction': transaction,
+        'node_identifier': blockchain.node_identifier
+        }
 
     return jsonify(response), 200
 
@@ -100,6 +109,7 @@ def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
   response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+
   return response
 
 if __name__ == '__main__':
