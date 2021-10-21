@@ -78,6 +78,7 @@ balances = null
 
 $( '#blockchain' ).click(function() {
   $( '#blockchain' ).prop('disabled', true);
+  $( '#blockchain_response' ).text( "" );
   $.getJSON( host + ":" + port + "/chain", function( data ) {
     node_identifier = data.node_identifier;
     $( '#blockchain_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
@@ -92,6 +93,7 @@ $( '#blockchain' ).click(function() {
 
 $( '#balance' ).click(function() {
   $( '#balance' ).prop('disabled', true);
+  $( '#balance_response' ).text( "" );
   $.getJSON( host + ":" + port + "/utxo", function( data ) {
     node_identifier = data.node_identifier;
     balances = data;
@@ -124,6 +126,7 @@ $( '#transact' ).click(function() {
   }
   $( '#transact_error' ).text("");
   $( '#transact' ).prop('disabled', true);
+  $( '#transact_response' ).text( "" );
   $.ajax({
     method: "POST",
     contentType: "application/json",
@@ -142,6 +145,7 @@ $( '#transact' ).click(function() {
 
 $( '#mynetwork' ).click(function() {
   $( '#mynetwork' ).prop('disabled', true);
+  $( '#mynetwork_response' ).text( "" );
   $.ajax({
     method: "POST",
     contentType: "application/json",
@@ -161,6 +165,7 @@ $( '#mynetwork' ).click(function() {
 
 $( '#mine' ).click(function() {
   $( '#mine' ).prop('disabled', true);
+  $( '#mine_response' ).text( "" );
   $.getJSON( host + ":" + port + "/mine", function( data ) {
     $( '#mine_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
   }).fail(function () {
@@ -174,6 +179,7 @@ $( '#mine' ).click(function() {
 
 $( '#consensus' ).click(function() {
   $( '#consensus' ).prop('disabled', true);
+  $( '#consensus_response' ).text( "" );
   $.getJSON( host + ":" + port + "/nodes/resolve", function( data ) {
     $( '#consensus_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
   }).fail(function () {
