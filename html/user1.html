@@ -108,7 +108,7 @@ $( '#balance' ).click(function() {
 });
 
 $( '#transact' ).click(function() {
-  if( !node_identifier ) {
+  if( !balances ) {
     $( '#transact_error' ).text("Please check your balance first.");
     return;
   }
