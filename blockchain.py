@@ -60,10 +60,10 @@ class Blockchain(object):
             for transaction in self.current_transactions:
                 new_block = {
                     'block': {
-                        'transactions': current_transactions_final.copy().append(transaction)
+                        'transactions': current_transactions_final + [transaction]
                     }
                 }
-                balances = Blockchain.utxo(self.chain.copy().append(new_block))
+                balances = Blockchain.utxo(self.chain + [new_block])
                 del balances['0']
                 if all(value >= 0 for value in balances.values()):
                     current_transactions_final.append(transaction)
