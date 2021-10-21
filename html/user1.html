@@ -78,7 +78,7 @@ balances = null
 
 $( '#blockchain' ).click(function() {
   $( '#blockchain' ).prop('disabled', true);
-  $( '#blockchain_response' ).text( "" );
+  // $( '#blockchain_response' ).text( "" );
   $.getJSON( host + ":" + port + "/chain", function( data ) {
     node_identifier = data.node_identifier;
     $( '#blockchain_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
