@@ -21,31 +21,6 @@ class Blockchain(object):
         # create the genesis block
         self.proof_of_work(previous_hash='0000')
 
-    def utxo(self):
-        """
-        calculate balance for each address from transaction history
-        :return: <dict> unspent transaction output
-        """
-        balances = {}
-
-        for block in self.chain:
-            for transaction in block['block']['transactions']:
-                # if address is already there, add the amount of the original balance
-                # else, create new entry and record the amount
-                # for recipient:
-                if transaction['recipient'] in balances.keys():
-                    balances[transaction['recipient']] += transaction['amount']
-                else:
-                    balances[transaction['recipient']] = transaction['amount']
-                
-                # for sender:
-                if transaction['sender'] in balances.keys():
-                    balances[transaction['sender']] -= transaction['amount']
-                else:
-                    balances[transaction['sender']] = -transaction['amount']
-        
-        return balances
-
     def new_block(self, nonce):
         """
         create a new block in the blockchain
@@ -77,6 +52,22 @@ class Blockchain(object):
         :return: <int>
         """
 
+        # validate transactions
+        # after each transaction, all accounts should have non-negative balances
+        # otherwise, reject the transction
+        current_transactions_final = []
+        if len(self.current_transactions) > 0:
+            for transaction in self.current_transactions:
+                new_block = {
+                    'block': {
+                        'transactions': current_transactions_final.copy().append(transaction)
+                    }
+                }
+                balances = Blockchain.utxo(self.chain.copy().append(new_block))
+                del balances['0']
+                if all(value >= 0 for value in balances.values()):
+                    current_transactions_final.append(transaction)
+
         # block reward
         # will become finalized if the block is properly appended to the chain
         reward = {
@@ -90,7 +81,7 @@ class Blockchain(object):
                 'index': len(self.chain) + 1,
                 'timestamp': time(),
                 # block reward appended to the current transaction list
-                'transactions': self.current_transactions + [reward],
+                'transactions': current_transactions_final + [reward],
                 'nonce': 0,
                 'previous_hash': previous_hash or self.last_block['hash']
             },
@@ -123,14 +114,13 @@ class Blockchain(object):
         :return: <bool> True if our chain was replaced, False if not
         """
 
-        neighbours = self.nodes
         new_chain = None
 
         # we're only looking for chains longer than ours
         max_length = len(self.chain)
 
         # grab and verify the chains from all the nodes in our network
-        for node in neighbours:
+        for node in self.nodes:
             response = requests.get(f'http://{node}/chain')
 
             if response.status_code == 200:
@@ -165,6 +155,38 @@ class Blockchain(object):
 
         return self.current_transactions[-1]
     
+    def broadcast_transaction(self, sender, recipient, amount):
+        for node in self.nodes:
+            response = requests.post(f'http://{node}/transactions/new', json={'sender': sender, 'recipient': recipient, 'amount': amount})
+
+        return {'sender': sender, 'recipient': recipient, 'amount': amount}
+    
+    @staticmethod
+    def utxo(chain):
+        """
+        calculate balance for each address from transaction history
+        :return: <dict> unspent transaction output
+        """
+        balances = {}
+
+        for block in chain:
+            for transaction in block['block']['transactions']:
+                # if address is already there, add the amount of the original balance
+                # else, create new entry and record the amount
+                # for recipient:
+                if transaction['recipient'] in balances.keys():
+                    balances[transaction['recipient']] += transaction['amount']
+                else:
+                    balances[transaction['recipient']] = transaction['amount']
+                
+                # for sender:
+                if transaction['sender'] in balances.keys():
+                    balances[transaction['sender']] -= transaction['amount']
+                else:
+                    balances[transaction['sender']] = -transaction['amount']
+        
+        return balances
+
     @staticmethod
     def starts_with_zeros(string):
         difficulty = 3
