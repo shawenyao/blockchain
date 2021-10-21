@@ -33,7 +33,7 @@ def register_nodes():
 
     if nodes is None or len(nodes) == 0:
         response = {
-            'message': 'available nodes',
+            'message': 'all available nodes',
             'all_nodes': list(blockchain.nodes),
             'node_identifier': blockchain.node_identifier
         }
