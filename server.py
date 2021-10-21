@@ -78,7 +78,7 @@ def new_transaction():
     transaction = blockchain.new_transaction(values['sender'], values['recipient'], float(values['amount']))
 
     response = {
-        'message': 'transaction will be added to the next block',
+        'message': 'transaction will be added to the next block after verification',
         'transaction': transaction,
         'node_identifier': blockchain.node_identifier
         }
