@@ -44,29 +44,35 @@ class Blockchain(object):
         # return the newly-created block
         return self.last_block
 
+    def get_valid_transactions(self):
+        """
+        after each transaction, all accounts should have non-negative balances
+        otherwise, reject the transction
+        :return: <dict> a dict of valid transactions
+        """
+        valid_transactions = []
+
+        for transaction in self.current_transactions:
+            new_block = {
+                'block': {
+                    'transactions': valid_transactions + [transaction]
+                }
+            }
+            balances = Blockchain.utxo(self.chain + [new_block])
+            del balances['0']
+            if all(value >= 0 for value in balances.values()):
+                valid_transactions.append(transaction)
+        
+        return valid_transactions
+
     def proof_of_work(self, previous_hash=None):
         """
         simple proof of work algorithm:
          - find a number nonce such that hash(block(nonce)) contains several leading zeros
-        :param last_nonce: <int>
-        :return: <int>
+        :return: <dict> a dict of the newly minted block 
         """
-
         # validate transactions
-        # after each transaction, all accounts should have non-negative balances
-        # otherwise, reject the transction
-        current_transactions_final = []
-        if len(self.current_transactions) > 0:
-            for transaction in self.current_transactions:
-                new_block = {
-                    'block': {
-                        'transactions': current_transactions_final + [transaction]
-                    }
-                }
-                balances = Blockchain.utxo(self.chain + [new_block])
-                del balances['0']
-                if all(value >= 0 for value in balances.values()):
-                    current_transactions_final.append(transaction)
+        valid_transactions = self.get_valid_transactions()
 
         # block reward
         # will become finalized if the block is properly appended to the chain
@@ -81,7 +87,7 @@ class Blockchain(object):
                 'index': len(self.chain) + 1,
                 'timestamp': time(),
                 # block reward appended to the current transaction list
-                'transactions': current_transactions_final + [reward],
+                'transactions': valid_transactions + [reward],
                 'nonce': 0,
                 'previous_hash': previous_hash or self.last_block['hash']
             },
@@ -135,6 +141,7 @@ class Blockchain(object):
         # replace our chain if we discovered a new, valid chain longer than ours
         if new_chain:
             self.chain = new_chain
+            self.current_transactions = []
             return True
 
         return False
