@@ -127,7 +127,7 @@ $( '#transact' ).click(function() {
   $.ajax({
     method: "POST",
     contentType: "application/json",
-    url: host + ":" + port + "/transactions/new",
+    url: host + ":" + port + "/transactions/broadcast",
     data: JSON.stringify({ sender: node_identifier, recipient: $('#recipient').val(), amount: $('#amount').val()})
   }).done(function( data ) {
       $( '#transact_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
