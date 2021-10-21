@@ -85,6 +85,26 @@ def new_transaction():
 
     return jsonify(response), 200
 
+@app.route('/transactions/broadcast', methods=['POST'])
+def broadcast_transaction():
+    values = request.get_json()
+
+    # check that the required fields are in the POST'ed data
+    required = ['sender', 'recipient', 'amount']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+
+    # broadcast a new transaction
+    transaction = blockchain.broadcast_transaction(values['sender'], values['recipient'], float(values['amount']))
+
+    response = {
+        'message': 'transaction has been broadcasted to all nodes and will be added to the next block',
+        'transaction': transaction,
+        'node_identifier': blockchain.node_identifier
+        }
+
+    return jsonify(response), 200
+
 @app.route('/chain', methods=['GET'])
 def full_chain():
     response = {
@@ -98,7 +118,7 @@ def full_chain():
 @app.route('/utxo', methods=['GET'])
 def utxo():
     response = {
-        'balances': blockchain.utxo(),
+        'balances': Blockchain.utxo(blockchain.chain),
         'node_identifier': blockchain.node_identifier
     }
 
