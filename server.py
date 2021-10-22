@@ -9,10 +9,10 @@ import sys
 app = Flask(__name__)
 
 # Generate a globally unique address for this node
-node_identifier = str(uuid4()).replace('-', '')
+node_id = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
-blockchain = Blockchain(node_identifier)
+blockchain = Blockchain(node_id)
 
 @app.route('/mine', methods=['GET'])
 def mine():
@@ -22,7 +22,7 @@ def mine():
     response = {
         'message': 'new block forged',
         'index': block['block']['index'],
-        'node_identifier': blockchain.node_identifier
+        'node_id': blockchain.node_id
     }
 
     return jsonify(response), 200
@@ -35,7 +35,7 @@ def register_nodes():
         response = {
             'message': 'all available nodes',
             'all_nodes': list(blockchain.nodes),
-            'node_identifier': blockchain.node_identifier
+            'node_id': blockchain.node_id
         }
     else:
         for node in nodes:
@@ -43,7 +43,7 @@ def register_nodes():
         response = {
             'message': 'new nodes added',
             'all_nodes': list(blockchain.nodes),
-            'node_identifier': blockchain.node_identifier
+            'node_id': blockchain.node_id
         }
 
     return jsonify(response), 200
@@ -55,12 +55,12 @@ def consensus():
     if replaced:
         response = {
             'message': 'our chain has been replaced',
-            'node_identifier': blockchain.node_identifier
+            'node_id': blockchain.node_id
         }
     else:
         response = {
             'message': 'our chain is authoritative',
-            'node_identifier': blockchain.node_identifier
+            'node_id': blockchain.node_id
         }
 
     return jsonify(response), 200
@@ -80,7 +80,7 @@ def new_transaction():
     response = {
         'message': 'transaction will be added to the next block after validation',
         'transaction': transaction,
-        'node_identifier': blockchain.node_identifier
+        'node_id': blockchain.node_id
         }
 
     return jsonify(response), 200
@@ -100,7 +100,7 @@ def broadcast_transaction():
     response = {
         'message': 'transaction has been broadcasted to the network and will be added to the next block after validation',
         'transaction': transaction,
-        'node_identifier': blockchain.node_identifier
+        'node_id': blockchain.node_id
         }
 
     return jsonify(response), 200
@@ -109,7 +109,7 @@ def broadcast_transaction():
 def full_chain():
     response = {
         'chain': blockchain.chain,
-        'node_identifier': blockchain.node_identifier,
+        'node_id': blockchain.node_id,
         'length': len(blockchain.chain),
     }
 
@@ -119,7 +119,7 @@ def full_chain():
 def utxo():
     response = {
         'balances': Blockchain.utxo(blockchain.chain),
-        'node_identifier': blockchain.node_identifier
+        'node_id': blockchain.node_id
     }
 
     return jsonify(response), 200

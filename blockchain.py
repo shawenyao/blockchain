@@ -6,9 +6,9 @@ import requests
 import random
 
 class Blockchain(object):
-    def __init__(self, node_identifier):
+    def __init__(self, node_id):
         # the id of the node
-        self.node_identifier = node_identifier
+        self.node_id = node_id
         # the dictionary of pending transactions
         self.current_transactions = []
         # the list of blocks
@@ -78,7 +78,7 @@ class Blockchain(object):
         # will become finalized if the block is properly appended to the chain
         reward = {
             'sender': '0',
-            'recipient': self.node_identifier,
+            'recipient': self.node_id,
             'amount': 1
         }
 

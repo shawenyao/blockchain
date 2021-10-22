@@ -73,14 +73,14 @@ Amount: <input id='amount' type="number">
 
 const host = "http://kodi.local"
 const port = 5000;
-node_identifier = null
+node_id = null
 balances = null
 
 $( '#blockchain' ).click(function() {
   $( '#blockchain' ).prop('disabled', true);
   // $( '#blockchain_response' ).text( "" );
   $.getJSON( host + ":" + port + "/chain", function( data ) {
-    node_identifier = data.node_identifier;
+    node_id = data.node_id;
     $( '#blockchain_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
   }).fail(function () {
     $( '#blockchain_response' ).text( JSON.stringify({message: "connection error."}, null, 4) );
@@ -95,7 +95,7 @@ $( '#balance' ).click(function() {
   $( '#balance' ).prop('disabled', true);
   $( '#balance_response' ).text( "" );
   $.getJSON( host + ":" + port + "/utxo", function( data ) {
-    node_identifier = data.node_identifier;
+    node_id = data.node_id;
     balances = data;
     $( '#balance_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
   }).fail(function () {
@@ -120,7 +120,7 @@ $( '#transact' ).click(function() {
     $( '#transact_error' ).text("Please enter an amount.");
     return;
   }
-  if( $( '#amount' ).val() > balances.balances[node_identifier] ) {
+  if( $( '#amount' ).val() > balances.balances[node_id] ) {
     $( '#transact_error' ).text("Please enter a smaller amount.");
     return;
   }
@@ -131,7 +131,7 @@ $( '#transact' ).click(function() {
     method: "POST",
     contentType: "application/json",
     url: host + ":" + port + "/transactions/broadcast",
-    data: JSON.stringify({ sender: node_identifier, recipient: $('#recipient').val(), amount: $('#amount').val()})
+    data: JSON.stringify({ sender: node_id, recipient: $('#recipient').val(), amount: $('#amount').val()})
   }).done(function( data ) {
       $( '#transact_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
     }).fail(function () {
