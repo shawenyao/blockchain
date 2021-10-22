@@ -192,6 +192,9 @@ class Blockchain(object):
                 else:
                     balances[transaction['sender']] = -transaction['amount']
         
+        for key in balances.keys():
+            balances[key] = round(balances[key], 4)
+        
         return balances
 
     @staticmethod
