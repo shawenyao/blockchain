@@ -98,7 +98,7 @@ def broadcast_transaction():
     transaction = blockchain.broadcast_transaction(values['sender'], values['recipient'], float(values['amount']))
 
     response = {
-        'message': 'transaction has been broadcasted to all nodes and will be added to the next block after validation',
+        'message': 'transaction has been broadcasted to the network and will be added to the next block after validation',
         'transaction': transaction,
         'node_identifier': blockchain.node_identifier
         }
