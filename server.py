@@ -5,14 +5,11 @@ from waitress import serve
 import logging
 import sys
 
-# Instantiate our Node
+# instantiate our Node
 app = Flask(__name__)
 
-# Generate a globally unique address for this node
-node_id = str(uuid4()).replace('-', '')
-
 # Instantiate the Blockchain
-blockchain = Blockchain(node_id)
+blockchain = Blockchain()
 
 @app.route('/mine', methods=['GET'])
 def mine():
@@ -137,6 +134,13 @@ if __name__ == '__main__':
         port = 5000
     else:
         port = sys.argv[1]
+
+    if(len(sys.argv) == 3):
+        node_id = sys.argv[2]
+    else:
+        node_id = str(uuid4()).replace('-', '')
+
+    blockchain.initialize(node_id)
 
     logger = logging.getLogger('waitress')
     logger.setLevel(logging.DEBUG)

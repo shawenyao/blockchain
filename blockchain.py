@@ -6,7 +6,7 @@ import requests
 import random
 
 class Blockchain(object):
-    def __init__(self, node_id):
+    def initialize(self, node_id):
         # the id of the node
         self.node_id = node_id
         # the dictionary of pending transactions
