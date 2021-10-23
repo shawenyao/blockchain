@@ -20,7 +20,7 @@ class Blockchain(object):
         self.nodes = {}
 
         # create the genesis block
-        self.proof_of_work(previous_hash='0000')
+        self.proof_of_work(previous_hash='n/a')
 
     def new_block(self, nonce):
         """
