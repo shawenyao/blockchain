@@ -120,8 +120,8 @@ $( '#transact' ).click(function() {
     $( '#transact_error' ).text("Please enter an amount.");
     return;
   }
-  if( $( '#amount' ).val() > balances.balances[node_id] ) {
-    $( '#transact_error' ).text("Please enter a smaller amount.");
+  if( balances.balances[node_id] == null | $( '#amount' ).val() > balances.balances[node_id]) {
+    $( '#transact_error' ).text("Insufficient funds.");
     return;
   }
   $( '#transact_error' ).text("");
