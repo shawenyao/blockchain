@@ -23,7 +23,7 @@ class Blockchain(object):
 
         # create the genesis block
         # where previous hash is hard-coded (64 characters to be consistent)
-        self.proof_of_work(previous_hash='previous hash is not applicable in the case of the genesis block')
+        self.proof_of_work(previous_hash='000b1fc1ded776f052fd8053a0f49686878e6e86d7c7a013ec0d9a3bcb843681')
 
     def new_block(self, nonce):
         """
