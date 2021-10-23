@@ -48,7 +48,7 @@ class Blockchain(object):
         """
         after each transaction, all accounts should have non-negative balances
         otherwise, reject the transction
-        :return: <dict> a dict of valid transactions
+        :return: <dict> valid transactions
         """
         valid_transactions = []
 
@@ -69,18 +69,25 @@ class Blockchain(object):
         """
         simple proof of work algorithm:
          - find a number nonce such that hash(block(nonce)) contains several leading zeros
-        :return: <dict> a dict of the newly minted block 
+        :return: <dict> the newly minted block 
         """
         # validate transactions
         valid_transactions = self.get_valid_transactions()
 
         # block reward
         # will become finalized if the block is properly appended to the chain
-        reward = {
-            'sender': '0',
-            'recipient': self.node_id,
-            'amount': 1
-        }
+        if previous_hash:
+            reward = {
+                'sender': '0',
+                'recipient': 'satoshi',
+                'amount': 1
+            }
+        else:
+            reward = {
+                'sender': '0',
+                'recipient': self.node_id,
+                'amount': 1
+            }
 
         self.tentative_block = {
             'block': {
@@ -220,7 +227,7 @@ class Blockchain(object):
     @staticmethod
     def valid_proof(block, nonce):
         """
-        validates the nonce: does hash(last_nonce, nonce) start with several leading zeroes?
+        validates the nonce: does hash(block(nonce)) start with several leading zeroes?
         :param last_nonce: <dict> a block
         :param nonce: <int> tentative nonce
         :return: <bool> True if correct, False if not.
