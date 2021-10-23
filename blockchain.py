@@ -22,8 +22,8 @@ class Blockchain(object):
         self.nodes = {}
 
         # create the genesis block
-        # where previous hash is hard-coded (64 characters to be consistent)
-        self.proof_of_work(previous_hash='previous hash is not applicable in the case of the genesis block')
+        # where previous hash is hard-coded
+        self.proof_of_work(previous_hash='[note: previous hash is not applicable in the case of genesis block]')
 
     def new_block(self, nonce):
         """
@@ -104,7 +104,7 @@ class Blockchain(object):
         
         # if previous_hash is provided (i.e., genesis block), use hard-coded nonce (pre-solved)
         if previous_hash:
-            nonce = 1965746891
+            nonce = 1977253743
         else:
             # find the nonce such that hash(block(nonce)) contains several leading zeros
             nonce = random.randint(0, 2147483647)
