@@ -6,6 +6,8 @@ from pytz import timezone
 from datetime import datetime
 from urllib.parse import urlparse
 
+difficulty = 3
+
 class Blockchain(object):
     def __init__(self, node_id):
         # the id of the node
@@ -213,7 +215,6 @@ class Blockchain(object):
 
     @staticmethod
     def starts_with_zeros(string):
-        difficulty = 3
         return string[:difficulty] == '0' * difficulty
 
     @staticmethod
