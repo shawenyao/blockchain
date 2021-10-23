@@ -133,13 +133,13 @@ def after_request(response):
   return response
 
 if __name__ == '__main__':
-    # if no port number is provided
+    # if no port number is not provided
     if(len(sys.argv) < 2):
         port = 5000
     else:
         port = sys.argv[1]
 
-    # if no node id is provided
+    # if no node id is not provided
     if(len(sys.argv) < 3):
         node_id = str(uuid4()).replace('-', '')
     else:
