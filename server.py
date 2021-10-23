@@ -8,9 +8,6 @@ import sys
 # instantiate our Node
 app = Flask(__name__)
 
-# Instantiate the Blockchain
-blockchain = Blockchain()
-
 @app.route('/id', methods=['GET'])
 def id():
     response = {
@@ -148,7 +145,8 @@ if __name__ == '__main__':
     else:
         node_id = sys.argv[2]
 
-    blockchain.initialize(node_id)
+    # instantiate the Blockchain
+    blockchain = Blockchain(node_id)
 
     logger = logging.getLogger('waitress')
     logger.setLevel(logging.DEBUG)
