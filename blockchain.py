@@ -1,9 +1,10 @@
 import hashlib
 import json
-from time import time
-from urllib.parse import urlparse
 import requests
 import random
+from pytz import timezone
+from datetime import datetime
+from urllib.parse import urlparse
 
 class Blockchain(object):
     def __init__(self, node_id):
@@ -76,6 +77,7 @@ class Blockchain(object):
 
         # block reward
         # will become finalized if the block is properly appended to the chain
+        # if previous_hash is provided (i.e., genesis block), use hard-coded recipient
         if previous_hash:
             reward = {
                 'sender': '0',
@@ -92,7 +94,9 @@ class Blockchain(object):
         self.tentative_block = {
             'block': {
                 'index': len(self.chain) + 1,
-                'timestamp': time(),
+                # if previous_hash is provided (i.e., genesis block), use hard-coded timestamp
+                'timestamp': datetime(2009, 1, 3, 13, 15).strftime('%b %d, %Y %H:%M:%S %p ET')\
+                     if previous_hash else datetime.now(timezone('US/Eastern')).strftime('%b %d, %Y %H:%M:%S %p ET'),
                 # block reward appended to the current transaction list
                 'transactions': valid_transactions + [reward],
                 'nonce': 0,
