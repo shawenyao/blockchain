@@ -1,0 +1,11 @@
+Learn Blockchains by Building One
+https://hackernoon.com/learn-blockchains-by-building-one-117428612f46
+
+Learn Blockchains using Spreadsheets
+https://medium.com/@vanflymen/learn-blockchains-using-spreadsheets-b97ad92b9b4d
+
+How do peer-to-peer programs discover each other?
+https://jameshfisher.com/2017/08/11/peer-to-peer-discovery/
+
+Nested tables from json
+http://bl.ocks.org/nautat/4085017
