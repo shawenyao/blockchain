@@ -80,18 +80,11 @@ class Blockchain(object):
         # block reward
         # will become finalized if the block is properly appended to the chain
         # if previous_hash is provided (i.e., genesis block), use hard-coded recipient
-        if previous_hash:
-            reward = {
-                'sender': '0',
-                'recipient': 'satoshi',
-                'amount': 1
-            }
-        else:
-            reward = {
-                'sender': '0',
-                'recipient': self.node_id,
-                'amount': 1
-            }
+        reward = {
+            'sender': '0',
+            'recipient': 'satoshi' if previous_hash else self.node_id,
+            'amount': 1
+        }
 
         self.tentative_block = {
             'block': {
@@ -107,10 +100,14 @@ class Blockchain(object):
             'hash': ''
         }
         
-        # find the nonce such that hash(block(nonce)) contains several leading zeros
-        nonce = random.randint(0, 2147483647)
-        while Blockchain.valid_proof(self.tentative_block, nonce) is False:
-            nonce += 1
+        # if previous_hash is provided (i.e., genesis block), use hard-coded nonce
+        if previous_hash:
+            nonce = 1649646048
+        else:
+            # find the nonce such that hash(block(nonce)) contains several leading zeros
+            nonce = random.randint(0, 2147483647)
+            while Blockchain.valid_proof(self.tentative_block, nonce) is False:
+                nonce += 1
 
         # after finding the solution, add the block to chain
         block = self.new_block(nonce)
