@@ -86,6 +86,7 @@ class Blockchain(object):
             'amount': 1
         }
 
+        # new block for which nonce needs to be solved
         self.tentative_block = {
             'block': {
                 'index': len(self.chain) + 1,
@@ -100,7 +101,7 @@ class Blockchain(object):
             'hash': ''
         }
         
-        # if previous_hash is provided (i.e., genesis block), use hard-coded nonce
+        # if previous_hash is provided (i.e., genesis block), use hard-coded nonce (pre-solved)
         if previous_hash:
             nonce = 1649646048
         else:
