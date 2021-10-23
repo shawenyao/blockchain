@@ -11,6 +11,14 @@ app = Flask(__name__)
 # Instantiate the Blockchain
 blockchain = Blockchain()
 
+@app.route('/id', methods=['GET'])
+def id():
+    response = {
+        'node_id': blockchain.node_id
+    }
+
+    return jsonify(response), 200
+
 @app.route('/mine', methods=['GET'])
 def mine():
     # We run the proof of work algorithm to get the next nonce...
@@ -29,19 +37,17 @@ def register_nodes():
     nodes = request.get_json().get('nodes')
 
     if nodes is None or len(nodes) == 0:
-        response = {
-            'message': 'all available nodes',
-            'all_nodes': list(blockchain.nodes),
-            'node_id': blockchain.node_id
-        }
+        message = 'all available nodes'
     else:
         for node in nodes:
             blockchain.register_node(node)
-        response = {
-            'message': 'new nodes added',
-            'all_nodes': list(blockchain.nodes),
-            'node_id': blockchain.node_id
-        }
+        message = 'new nodes added'
+
+    response = {
+        'message': message,
+        'all_nodes': list(blockchain.nodes.keys()),
+        'node_id': blockchain.node_id
+    }
 
     return jsonify(response), 200
 
@@ -135,10 +141,10 @@ if __name__ == '__main__':
     else:
         port = sys.argv[1]
 
-    if(len(sys.argv) == 3):
-        node_id = sys.argv[2]
-    else:
+    if(len(sys.argv) == 2):
         node_id = str(uuid4()).replace('-', '')
+    else:
+        node_id = sys.argv[2]
 
     blockchain.initialize(node_id)
 

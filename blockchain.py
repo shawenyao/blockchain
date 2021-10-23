@@ -16,7 +16,7 @@ class Blockchain(object):
         # the next block to be forged but not yet finalized
         self.tentative_block = {}
         # the set of negbouring nodes
-        self.nodes = set()
+        self.nodes = {}
 
         # create the genesis block
         self.proof_of_work(previous_hash='0000')
@@ -110,8 +110,11 @@ class Blockchain(object):
         :param address: <str> address of node. Eg. 'http://192.168.0.5:5000'
         """
 
-        parsed_url = urlparse(address)
-        self.nodes.add(parsed_url.netloc)
+        new_node_address = urlparse(address).netloc
+        
+        response = requests.get(f'http://{new_node_address}/id')
+        if response.status_code == 200:
+            self.nodes[response.json()['node_id']] = new_node_address
 
     def resolve_conflicts(self):
         """
@@ -126,7 +129,7 @@ class Blockchain(object):
         max_length = len(self.chain)
 
         # grab and verify the chains from all the nodes in our network
-        for node in self.nodes:
+        for node in self.nodes.values():
             response = requests.get(f'http://{node}/chain')
 
             if response.status_code == 200:
@@ -163,7 +166,7 @@ class Blockchain(object):
         return self.current_transactions[-1]
     
     def broadcast_transaction(self, sender, recipient, amount):
-        for node in self.nodes:
+        for node in self.nodes.values():
             response = requests.post(f'http://{node}/transactions/new', json={'sender': sender, 'recipient': recipient, 'amount': amount})
 
         return {'sender': sender, 'recipient': recipient, 'amount': amount}
