@@ -101,7 +101,7 @@ $( '#blockchain' ).click(function() {
   $.getJSON( host + ':' + port + '/chain', function( data ) {
     node_id = data.node_id;
     d3.select( 'body' ).selectAll( 'div' )
-      .data([data])
+      .data([data.chain])
       .append( 'table' )
       .call(recurse);
   }).fail(function () {
