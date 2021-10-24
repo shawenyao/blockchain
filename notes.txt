@@ -9,3 +9,9 @@ https://jameshfisher.com/2017/08/11/peer-to-peer-discovery/
 
 Nested tables from json
 http://bl.ocks.org/nautat/4085017
+
+Read lines from a file into a Bash array
+https://stackoverflow.com/questions/11393817/read-lines-from-a-file-into-a-bash-array
+
+How to split a string into an array in Bash?
+https://stackoverflow.com/questions/10586153/how-to-split-a-string-into-an-array-in-bash
