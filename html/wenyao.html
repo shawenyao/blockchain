@@ -133,6 +133,10 @@ Amount: <input id='amount' type="number">
 <pre id='transact_response' style="height:180px;width:100%;" class="prettyprint">
 </pre>
 
+<button id='pending_transactions'>⏳ Pending transactions</button>
+<pre id='pending_transactions_response' style="height:200px;width:100%;" class="prettyprint">
+</pre>
+
 <button id='mynetwork'>🌐 My network</button>
 <pre id='mynetwork_response' style="height:200px;width:100%;" class="prettyprint">
 </pre>
@@ -214,6 +218,26 @@ $( '#transact' ).click(function() {
       $( '#transact_response' ).text( 'connection error. please retry.' );
     }).always(function () {
       $( '#transact' ).prop('disabled', false);
+    });
+});
+
+$( '#pending_transactions' ).click(function() {
+  $( '#pending_transactions' ).prop('disabled', true);
+  $( '#pending_transactions_response' ).text( '' );
+  $.ajax({
+    method: "POST",
+    contentType: "application/json",
+    url: host + ':' + port + '/transactions/pending',
+    data: JSON.stringify({ nodes: [] })
+  })
+    .done(function( data ) {
+      $( '#pending_transactions_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
+      $( '#pending_transactions_response' ).attr('class', 'prettyprint');
+      PR.prettyPrint();
+    }).fail(function () {
+      $( '#pending_transactions_response' ).text( 'connection error. please retry.' );
+    }).always(function () {
+      $( '#pending_transactions_response' ).prop('disabled', false);
     });
 });
 
