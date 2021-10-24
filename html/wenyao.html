@@ -78,6 +78,7 @@ div {
   background-color: #F8F8F8 !important;
   margin: 1em 0px;
   box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
+  font-family: Menlo,Bitstream Vera Sans Mono,DejaVu Sans Mono,Monaco,Consolas,monospace;
 }
 pre.prettyprint {
   border: 2px solid #ccc !important;
@@ -142,7 +143,7 @@ Amount: <input id='amount' type="number">
 
 <script>
 
-const host = "http://hbschain.us.to"
+const host = "http://hbschai2n.us.to"
 const port = 5000;
 node_id = null
 balances = null
@@ -158,7 +159,7 @@ $( '#blockchain' ).click(function() {
       .append( 'table' )
       .call(recurse);
   }).fail(function () {
-    $( '#blockchain_response' ).text( JSON.stringify({message: "connection error."}, null, 4) );
+    $( '#blockchain_response' ).text( 'connection error. please retry.' );
   }).always(function () {
     $( '#blockchain' ).prop('disabled', false);
   });
@@ -171,18 +172,18 @@ $( '#balance' ).click(function() {
     node_id = data.node_id;
     balances = data;
     $( '#balance_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
-  }).fail(function () {
-    $( '#balance_response' ).text( JSON.stringify({message: "connection error."}, null, 4) );
-  }).always(function () {
     $( '#balance_response' ).attr('class', 'prettyprint');
     PR.prettyPrint();
+  }).fail(function () {
+    $( '#balance_response' ).text( 'connection error. please retry.' );
+  }).always(function () {
     $( '#balance' ).prop('disabled', false);
   });
 });
 
 $( '#transact' ).click(function() {
   if( !balances ) {
-    $( '#transact_error' ).text('Please check your balance first.');
+    $( '#transact_error' ).text( 'Please check your balance first.' );
     return;
   }
   if( !$( '#recipient' ).val() ) {
@@ -207,11 +208,11 @@ $( '#transact' ).click(function() {
     data: JSON.stringify({ sender: node_id, recipient: $('#recipient').val(), amount: $('#amount').val()})
   }).done(function( data ) {
       $( '#transact_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
-    }).fail(function () {
-      $( '#transact_response' ).text( JSON.stringify({message: "connection error."}, null, 4) );
-    }).always(function () {
       $( '#transact_response' ).attr('class', 'prettyprint');
       PR.prettyPrint();
+    }).fail(function () {
+      $( '#transact_response' ).text( 'connection error. please retry.' );
+    }).always(function () {
       $( '#transact' ).prop('disabled', false);
     });
 });
@@ -227,11 +228,11 @@ $( '#mynetwork' ).click(function() {
   })
     .done(function( data ) {
       $( '#mynetwork_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
-    }).fail(function () {
-      $( '#mynetwork_response' ).text( JSON.stringify({message: "connection error."}, null, 4) );
-    }).always(function () {
       $( '#mynetwork_response' ).attr('class', 'prettyprint');
       PR.prettyPrint();
+    }).fail(function () {
+      $( '#mynetwork_response' ).text( 'connection error. please retry.' );
+    }).always(function () {
       $( '#mynetwork' ).prop('disabled', false);
     });
 });
@@ -241,11 +242,11 @@ $( '#mine' ).click(function() {
   $( '#mine_response' ).text( '' );
   $.getJSON( host + ':' + port + '/mine', function( data ) {
     $( '#mine_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
-  }).fail(function () {
-    $( '#mine_response' ).text( JSON.stringify({message: "connection error."}, null, 4) );
-  }).always(function () {
     $( '#mine_response' ).attr('class', 'prettyprint');
     PR.prettyPrint();
+  }).fail(function () {
+    $( '#mine_response' ).text( 'connection error. please retry.' );
+  }).always(function () {
     $( '#mine' ).prop('disabled', false);
   });
 });
@@ -255,11 +256,11 @@ $( '#consensus' ).click(function() {
   $( '#consensus_response' ).text( '' );
   $.getJSON( host + ':' + port + '/nodes/resolve', function( data ) {
     $( '#consensus_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
-  }).fail(function () {
-    $( '#consensus_response' ).text( JSON.stringify({message: "connection error."}, null, 4) );
-  }).always(function () {
     $( '#consensus_response' ).attr('class', 'prettyprint');
     PR.prettyPrint();
+  }).fail(function () {
+    $( '#consensus_response' ).text( 'connection error. please retry.' );
+  }).always(function () {
     $( '#consensus' ).prop('disabled', false);
   });
 });
