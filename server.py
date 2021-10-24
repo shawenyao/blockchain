@@ -84,16 +84,6 @@ def new_transaction():
 
     return jsonify(response), 200
 
-@app.route('/transactions/pending', methods=['GET'])
-def pending_transactions():
-    response = {
-        'message': 'pending transactions',
-        'pending_transactions': blockchain.pending_transactions,
-        'node_id': blockchain.node_id
-        }
-
-    return jsonify(response), 200
-
 @app.route('/transactions/broadcast', methods=['POST'])
 def broadcast_transaction():
     values = request.get_json()
@@ -109,6 +99,16 @@ def broadcast_transaction():
     response = {
         'message': 'transaction has been broadcasted to the network and will be added to the next block after validation',
         'transaction': transaction,
+        'node_id': blockchain.node_id
+        }
+
+    return jsonify(response), 200
+
+@app.route('/transactions/pending', methods=['GET'])
+def pending_transactions():
+    response = {
+        'message': 'pending transactions',
+        'pending_transactions': blockchain.pending_transactions,
         'node_id': blockchain.node_id
         }
 
