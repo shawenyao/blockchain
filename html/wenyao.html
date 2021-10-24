@@ -27,15 +27,17 @@ div {
   overflow: auto;
   background-color: #F8F8F8 !important;
   margin: 1em 0px;
+  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
 }
 pre.prettyprint {
   border: 2px solid #ccc !important;
   overflow: auto;
-  background-color: #F8F8F8 !important;
+  background-color: #F8F8F8;
+  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
 }
 table {
   font-family: "Helvetica", "Lucida Sans", "Lucida Sans Unicode", "Luxi Sans", Tahoma, sans-serif, monospace;
-  box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
+  box-shadow: 1px 1px 10px rgba(0,0,0,0.4);
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%;
@@ -43,7 +45,7 @@ table {
 table, td, th {
   padding: 5px;
   text-align: center;
-  border: 1px solid rgb(211,211,211);
+  border: 1px solid rgb(200,200,200);
   font-size: 14px;
 }
 th {
@@ -97,6 +99,7 @@ balances = null
 
 $( '#blockchain' ).click(function() {
   $( '#blockchain' ).prop('disabled', true);
+  $( '#blockchain_response' ).text( '' );
   d3.select( 'body' ).selectAll( 'table' ).remove();
   $.getJSON( host + ':' + port + '/chain', function( data ) {
     node_id = data.node_id;
