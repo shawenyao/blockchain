@@ -224,21 +224,15 @@ $( '#transact' ).click(function() {
 $( '#pending_transactions' ).click(function() {
   $( '#pending_transactions' ).prop('disabled', true);
   $( '#pending_transactions_response' ).text( '' );
-  $.ajax({
-    method: "POST",
-    contentType: "application/json",
-    url: host + ':' + port + '/transactions/pending',
-    data: JSON.stringify({ nodes: [] })
-  })
-    .done(function( data ) {
-      $( '#pending_transactions_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
-      $( '#pending_transactions_response' ).attr('class', 'prettyprint');
-      PR.prettyPrint();
-    }).fail(function () {
-      $( '#pending_transactions_response' ).text( 'connection error. please retry.' );
-    }).always(function () {
-      $( '#pending_transactions_response' ).prop('disabled', false);
-    });
+  $.getJSON( host + ':' + port + '/transactions/pending', function( data ) {
+    $( '#pending_transactions_response' ).text( JSON.stringify(data, null, 4).replace(/"(\w+)"\s*:/g, '$1:') );
+    $( '#pending_transactions_response' ).attr('class', 'prettyprint');
+    PR.prettyPrint();
+  }).fail(function () {
+    $( '#pending_transactions_response' ).text( 'connection error. please retry.' );
+  }).always(function () {
+    $( '#pending_transactions' ).prop('disabled', false);
+  });
 });
 
 $( '#mynetwork' ).click(function() {
