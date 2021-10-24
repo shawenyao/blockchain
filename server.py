@@ -53,13 +53,12 @@ def consensus():
     replaced = blockchain.resolve_conflicts()
 
     if replaced:
-        response = {
-            'message': 'our chain has been replaced',
-            'node_id': blockchain.node_id
-        }
+        message = 'our chain has been replaced'
     else:
-        response = {
-            'message': 'our chain is authoritative',
+        message = 'our chain is authoritative'
+
+    response = {
+            'message': message,
             'node_id': blockchain.node_id
         }
 
@@ -80,6 +79,16 @@ def new_transaction():
     response = {
         'message': 'transaction will be added to the next block after validation',
         'transaction': transaction,
+        'node_id': blockchain.node_id
+        }
+
+    return jsonify(response), 200
+
+@app.route('/transactions/pending', methods=['GET'])
+def pending_transactions():
+    response = {
+        'message': 'pending transactions',
+        'pending_transactions': blockchain.pending_transactions,
         'node_id': blockchain.node_id
         }
 

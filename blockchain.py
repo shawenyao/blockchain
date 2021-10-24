@@ -13,7 +13,7 @@ class Blockchain(object):
         # the id of the node
         self.node_id = node_id
         # the dictionary of pending transactions
-        self.current_transactions = []
+        self.pending_transactions = []
         # the list of blocks
         self.chain = []
         # the next block to be forged but not yet finalized
@@ -40,8 +40,8 @@ class Blockchain(object):
         # add to the chain
         self.chain.append(self.tentative_block)
 
-        # reset the current list of transactions
-        self.current_transactions = []
+        # reset the current list of pending transactions
+        self.pending_transactions = []
         # reset the next block to be forged
         self.tentative_block = {}        
 
@@ -56,7 +56,7 @@ class Blockchain(object):
         """
         valid_transactions = []
 
-        for transaction in self.current_transactions:
+        for transaction in self.pending_transactions:
             new_block = {
                 'block': {
                     'transactions': valid_transactions + [transaction]
@@ -94,7 +94,7 @@ class Blockchain(object):
                 # if previous_hash is provided (i.e., genesis block), use hard-coded timestamp
                 'timestamp': datetime(2009, 1, 3, 13, 15).strftime('%b %d, %Y %H:%M:%S %p ET')\
                      if previous_hash else datetime.now(timezone('US/Eastern')).strftime('%b %d, %Y %H:%M:%S %p ET'),
-                # block reward appended to the current transaction list
+                # block reward appended to the current list of pending transactions
                 'transactions': valid_transactions + [reward],
                 'nonce': 0,
                 'previous_hash': previous_hash or self.last_block['hash']
@@ -135,6 +135,7 @@ class Blockchain(object):
         :return: <bool> True if our chain was replaced, False if not
         """
 
+        authoritative_node = None
         new_chain = None
 
         # we're only looking for chains longer than ours
@@ -142,21 +143,26 @@ class Blockchain(object):
 
         # grab and verify the chains from all the nodes in our network
         for node in self.nodes.values():
-            response = requests.get(f'http://{node}/chain')
-
-            if response.status_code == 200:
-                length = response.json()['length']
-                chain = response.json()['chain']
+            response_chain = requests.get(f'http://{node}/chain')
+            if response_chain.status_code == 200:
+                length = response_chain.json()['length']
+                chain = response_chain.json()['chain']
 
                 # Check if the length is longer and the chain is valid
                 if length > max_length and Blockchain.valid_chain(chain):
+                    authoritative_node = node
                     max_length = length
                     new_chain = chain
 
         # replace our chain if we discovered a new, valid chain longer than ours
         if new_chain:
             self.chain = new_chain
-            self.current_transactions = []
+
+            # replace our pending transactions as well
+            response_pending_transactions = requests.get(f'http://{authoritative_node}/transactions/pending')
+            if response_pending_transactions.status_code == 200:
+                self.pending_transactions = response_pending_transactions.json()['pending_transactions']
+            
             return True
 
         return False
@@ -169,13 +175,13 @@ class Blockchain(object):
         :param amount: <float> amount
         :return: <int> the index of the Block that will hold this transaction
         """
-        self.current_transactions.append({
+        self.pending_transactions.append({
             'sender': sender,
             'recipient': recipient,
             'amount': amount,
         })
 
-        return self.current_transactions[-1]
+        return self.pending_transactions[-1]
     
     def broadcast_transaction(self, sender, recipient, amount):
         for node in self.nodes.values():
