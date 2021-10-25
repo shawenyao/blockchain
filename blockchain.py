@@ -78,7 +78,7 @@ class Blockchain(object):
         # validate transactions
         valid_transactions = self.get_valid_transactions()
 
-        # block reward
+        # block reward (aka coinbase)
         # will become finalized if the block is properly appended to the chain
         # if previous_hash is provided (i.e., genesis block), use hard-coded recipient
         reward = {
@@ -261,11 +261,15 @@ class Blockchain(object):
         while current_index < len(chain):
             block = chain[current_index]
 
-            # Check that the hash of the block is correct
+            # for every block after the 1st one, check if it's pointing to the previous hash
+            if current_index != 0 and block['block']['previous_hash'] != chain[current_index-1]['hash']:
+                return False
+
+            # check that the hash of the block is correct
             if block['hash'] != Blockchain.hash(block['block']):
                 return False
 
-            # Check that the Proof of Work is correct block['hash'][:4] != '0000'
+            # check that the proof of work is correct
             if not Blockchain.starts_with_zeros(block['hash']):
                 return False
 
