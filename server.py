@@ -53,7 +53,7 @@ def consensus():
     replaced = blockchain.resolve_conflicts()
 
     if replaced:
-        message = 'our chain has been replaced'
+        message = 'our chain and pending transactions have been replaced'
     else:
         message = 'our chain is authoritative'
 
