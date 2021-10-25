@@ -273,6 +273,9 @@ class Blockchain(object):
             if not Blockchain.starts_with_zeros(block['hash']):
                 return False
 
+            # (out-of-scope) also needs to check if all transactions are valid
+            # including 1) the sender has sufficient funds and 2) the sender's identity (digital signature)
+
             # move on to the next block
             current_index += 1
 
