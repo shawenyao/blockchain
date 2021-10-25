@@ -262,7 +262,7 @@ class Blockchain(object):
             block = chain[current_index]
 
             # for every block after the 1st one, check if it's pointing to the previous hash
-            if current_index != 0 and block['block']['previous_hash'] != chain[current_index-1]['hash']:
+            if current_index > 0 and block['block']['previous_hash'] != chain[current_index-1]['hash']:
                 return False
 
             # check that the hash of the block is correct
