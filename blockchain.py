@@ -116,7 +116,10 @@ class Blockchain(object):
         else:
             # find the nonce such that hash(block(nonce)) contains several leading zeros
             nonce = random.randint(0, 2147483647)
-            while Blockchain.valid_proof(self.tentative_block, nonce, self.difficulty) is False:
+            while Blockchain.valid_proof(self.tentative_block, nonce, self.tentative_block['difficulty']) is False:
+                # in case difficulty level got updated in the process
+                self.tentative_block['difficulty'] = self.difficulty
+                # next guess
                 nonce += 1
 
         # after finding the solution, add the block to chain
