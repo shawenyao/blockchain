@@ -6,10 +6,9 @@ from pytz import timezone
 from datetime import datetime
 from urllib.parse import urlparse
 
-difficulty = 3
 
 class Blockchain(object):
-    def __init__(self, node_id):
+    def __init__(self, node_id, difficulty):
         # the id of the node
         self.node_id = node_id
         # the dictionary of pending transactions
@@ -20,6 +19,8 @@ class Blockchain(object):
         self.tentative_block = {}
         # the set of negbouring nodes
         self.nodes = {}
+        # the difficulty of mining
+        self.difficulty = difficulty
 
         # create the genesis block
         # where previous hash is hard-coded
@@ -99,7 +100,8 @@ class Blockchain(object):
                 'nonce': 0,
                 'previous_hash': previous_hash or self.last_block['hash']
             },
-            'hash': ''
+            'hash': '',
+            'difficulty': self.difficulty
         }
         
         # if previous_hash is provided (i.e., genesis block), use hard-coded nonce (pre-solved)
@@ -108,7 +110,7 @@ class Blockchain(object):
         else:
             # find the nonce such that hash(block(nonce)) contains several leading zeros
             nonce = random.randint(0, 2147483647)
-            while Blockchain.valid_proof(self.tentative_block, nonce) is False:
+            while Blockchain.valid_proof(self.tentative_block, nonce, self.difficulty) is False:
                 nonce += 1
 
         # after finding the solution, add the block to chain
@@ -185,9 +187,13 @@ class Blockchain(object):
     
     def broadcast_transaction(self, sender, recipient, amount):
         for node in self.nodes.values():
-            response = requests.post(f'http://{node}/transactions/new', json={'sender': sender, 'recipient': recipient, 'amount': amount})
+            requests.post(f'http://{node}/transactions/new', json={'sender': sender, 'recipient': recipient, 'amount': amount})
 
         return {'sender': sender, 'recipient': recipient, 'amount': amount}
+    
+    def broadcast_difficulty(self, difficulty):
+        for node in self.nodes.values():
+            requests.get(f'http://{node}/difficulty/update?difficulty={difficulty}')
     
     @staticmethod
     def utxo(chain):
@@ -219,7 +225,7 @@ class Blockchain(object):
         return balances
 
     @staticmethod
-    def starts_with_zeros(string):
+    def starts_with_zeros(string, difficulty):
         return string[:difficulty] == '0' * difficulty
 
     @staticmethod
@@ -235,7 +241,7 @@ class Blockchain(object):
         return hashlib.sha256(block_string).hexdigest()
 
     @staticmethod
-    def valid_proof(block, nonce):
+    def valid_proof(block, nonce, difficulty):
         """
         validates the nonce: does hash(block(nonce)) start with several leading zeroes?
         :param last_nonce: <dict> a block
@@ -245,7 +251,7 @@ class Blockchain(object):
         block_copy = block.copy()
         block_copy['block']['nonce'] = nonce
         guess_hash = Blockchain.hash(block_copy['block'])
-        return Blockchain.starts_with_zeros(guess_hash)
+        return Blockchain.starts_with_zeros(guess_hash, difficulty)
     
     @staticmethod
     def valid_chain(chain):
@@ -270,7 +276,7 @@ class Blockchain(object):
                 return False
 
             # check that the proof of work is correct
-            if not Blockchain.starts_with_zeros(block['hash']):
+            if not Blockchain.starts_with_zeros(block['hash'], block['difficulty']):
                 return False
 
             # (out-of-scope) also needs to check if all transactions are valid

@@ -18,7 +18,7 @@ def id():
 
 @app.route('/mine', methods=['GET'])
 def mine():
-    # We run the proof of work algorithm to get the next nonce...
+    # we run the proof of work algorithm to get the next nonce
     block = blockchain.proof_of_work()
 
     response = {
@@ -61,6 +61,44 @@ def consensus():
             'message': message,
             'node_id': blockchain.node_id
         }
+
+    return jsonify(response), 200
+
+@app.route('/difficulty/update', methods=['GET'])
+def update_difficulty():
+    difficulty = request.args.get('difficulty')
+
+    # if difficulty is supplied, update the node's difficulty
+    # otherwise, return current difficulty
+    if difficulty:
+        difficulty_int = int(difficulty)
+        if difficulty_int >= 1 and difficulty_int <= 5:
+            blockchain.difficulty = difficulty_int
+            message = 'difficulty has been updated'
+        else:
+            message = 'difficulty must be between 1 and 5'
+    else:
+        message = 'current difficulty'
+
+    response = {
+        'message': message,
+        'difficulty': blockchain.difficulty,
+        'node_id': blockchain.node_id
+    }
+
+    return jsonify(response), 200
+
+@app.route('/difficulty/broadcast', methods=['GET'])
+def broadcast_difficulty():
+    difficulty = int(request.args.get('difficulty'))
+
+    blockchain.broadcast_difficulty(difficulty)
+
+    response = {
+        'message': 'difficulty has been broadcasted to the network',
+        'difficulty': difficulty,
+        'node_id': blockchain.node_id
+    }
 
     return jsonify(response), 200
 
@@ -155,7 +193,7 @@ if __name__ == '__main__':
         node_id = sys.argv[2]
 
     # instantiate the Blockchain
-    blockchain = Blockchain(node_id)
+    blockchain = Blockchain(node_id=node_id, difficulty=3)
 
     logger = logging.getLogger('waitress')
     logger.setLevel(logging.DEBUG)
