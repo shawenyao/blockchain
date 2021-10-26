@@ -162,9 +162,10 @@ class Blockchain(object):
                     max_effort = effort
                     new_chain = chain
 
-        # replace our chain if we discovered a new, valid chain longer than ours
+        # replace our chain if we discovered a new, valid chain that took more effort to build than ours
         if new_chain:
             self.chain = new_chain
+            self.effort = max_effort
 
             # replace our pending transactions as well
             response_pending_transactions = requests.get(f'http://{authoritative_node}/transactions/pending')
@@ -177,7 +178,7 @@ class Blockchain(object):
 
     def new_transaction(self, sender, recipient, amount):
         """
-        creates a new transaction to go into the next mined block
+        create a new transaction to go into the next mined block
         :param sender: <str> address of the Sender
         :param recipient: <str> address of the recipient
         :param amount: <float> amount
