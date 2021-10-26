@@ -21,6 +21,9 @@ class Blockchain(object):
         self.nodes = {}
         # the difficulty of mining
         self.difficulty = difficulty
+        # the effort it took to build the chain
+        # e.g., a block with difficulty 2 takes 16 times the effort to build than a block with difficulty 1
+        self.effort = 0
 
         # create the genesis block
         # where previous hash is hard-coded
@@ -40,6 +43,9 @@ class Blockchain(object):
 
         # add to the chain
         self.chain.append(self.tentative_block)
+
+        # increase effort of the chain
+        self.effort += 16 ** (self.tentative_block['difficulty']-1)
 
         # reset the current list of pending transactions
         self.pending_transactions = []
@@ -133,27 +139,27 @@ class Blockchain(object):
     def resolve_conflicts(self):
         """
         the consensus algorithm, it resolves conflicts
-        by replacing our chain with the longest one in the network.
+        by replacing our chain with the longest one in the network (as well as pending transactions)
         :return: <bool> True if our chain was replaced, False if not
         """
 
         authoritative_node = None
         new_chain = None
 
-        # we're only looking for chains longer than ours
-        max_length = len(self.chain)
+        # we're only looking for chains that are built with more effort than ours
+        max_effort = self.effort
 
         # grab and verify the chains from all the nodes in our network
         for node in self.nodes.values():
             response_chain = requests.get(f'http://{node}/chain')
             if response_chain.status_code == 200:
-                length = response_chain.json()['length']
+                effort = response_chain.json()['effort']
                 chain = response_chain.json()['chain']
 
-                # Check if the length is longer and the chain is valid
-                if length > max_length and Blockchain.valid_chain(chain):
+                # check if the effort is greater and the chain is valid
+                if effort > max_effort and Blockchain.valid_chain(chain):
                     authoritative_node = node
-                    max_length = length
+                    max_effort = effort
                     new_chain = chain
 
         # replace our chain if we discovered a new, valid chain longer than ours

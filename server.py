@@ -159,6 +159,7 @@ def full_chain():
         'chain': blockchain.chain,
         'node_id': blockchain.node_id,
         'length': len(blockchain.chain),
+        'effort': blockchain.effort
     }
 
     return jsonify(response), 200
