@@ -24,6 +24,7 @@ def mine():
     response = {
         'message': 'new block forged',
         'index': block['block']['index'],
+        'difficulty': blockchain.difficulty,
         'node_id': blockchain.node_id
     }
 
