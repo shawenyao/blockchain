@@ -45,7 +45,7 @@ class Blockchain(object):
         self.chain.append(self.tentative_block)
 
         # increase effort of the chain
-        self.effort += 16 ** (self.tentative_block['difficulty']-1)
+        self.effort += 16 ** (self.tentative_block['block']['difficulty']-1)
 
         # reset the current list of pending transactions
         self.pending_transactions = []
@@ -98,16 +98,16 @@ class Blockchain(object):
         self.tentative_block = {
             'block': {
                 'index': len(self.chain) + 1,
+                'difficulty': self.difficulty,
+                'nonce': 0,
                 # if previous_hash is provided (i.e., genesis block), use hard-coded timestamp
                 'timestamp': datetime(2009, 1, 3, 13, 15).strftime('%b %d, %Y %H:%M:%S %p ET')\
                      if previous_hash else datetime.now(timezone('US/Eastern')).strftime('%b %d, %Y %H:%M:%S %p ET'),
                 # block reward appended to the current list of pending transactions
                 'transactions': valid_transactions + [reward],
-                'nonce': 0,
                 'previous_hash': previous_hash or self.last_block['hash']
             },
             'hash': '',
-            'difficulty': self.difficulty
         }
         
         # if previous_hash is provided (i.e., genesis block), use hard-coded nonce (pre-solved)
@@ -116,7 +116,7 @@ class Blockchain(object):
         else:
             # find the nonce such that hash(block(nonce)) contains several leading zeros
             nonce = random.randint(0, 2147483647)
-            while Blockchain.valid_proof(self.tentative_block, nonce, self.tentative_block['difficulty']) is False:
+            while Blockchain.valid_proof(self.tentative_block, nonce, self.tentative_block['block']['difficulty']) is False:
                 # next guess
                 nonce += 1
 
@@ -284,7 +284,7 @@ class Blockchain(object):
                 return False
 
             # check that the proof of work is correct
-            if not Blockchain.starts_with_zeros(block['hash'], block['difficulty']):
+            if not Blockchain.starts_with_zeros(block['hash'], block['block']['difficulty']):
                 return False
 
             # (out-of-scope) also needs to check if all transactions are valid
