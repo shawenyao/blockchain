@@ -112,7 +112,7 @@ class Blockchain(object):
         
         # if previous_hash is provided (i.e., genesis block), use hard-coded nonce (pre-solved)
         if previous_hash:
-            nonce = 1977253743
+            nonce = 1443031394
         else:
             # find the nonce such that hash(block(nonce)) contains several leading zeros
             nonce = random.randint(0, 2147483647)
