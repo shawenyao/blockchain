@@ -97,7 +97,7 @@ class Blockchain(object):
         # new block for which nonce needs to be solved
         self.tentative_block = {
             'block': {
-                'index': len(self.chain) + 1,
+                '#': len(self.chain) + 1,
                 'difficulty': self.difficulty,
                 'nonce': 0,
                 # if previous_hash is provided (i.e., genesis block), use hard-coded timestamp
