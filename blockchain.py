@@ -228,7 +228,8 @@ class Blockchain(object):
                     balances[transaction['sender']] = -transaction['amount']
         
         for key in balances.keys():
-            balances[key] = round(balances[key], 4)
+            # round the balance to 8 decimal places
+            balances[key] = round(balances[key], 8)
         
         return balances
 
@@ -261,6 +262,23 @@ class Blockchain(object):
         guess_hash = Blockchain.hash(block_copy['block'])
         return Blockchain.starts_with_zeros(guess_hash, difficulty)
     
+    @staticmethod
+    def oracle():
+        """
+        get btc to usd price from yahoo finance
+        :return: <float>
+        """
+        headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        response = requests.get('http://query1.finance.yahoo.com/v6/finance/quote?region=US&lang=en&symbols=BTC-USD', headers=headers)
+        print(response.json())
+
+        if response.status_code == 200:
+            btcprice = response.json()['quoteResponse']['result'][0]['regularMarketPrice']
+        else:
+            btcprice = None
+        
+        return btcprice
+
     @staticmethod
     def valid_chain(chain):
         """

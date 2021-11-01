@@ -173,6 +173,24 @@ def utxo():
 
     return jsonify(response), 200
 
+@app.route('/oracle', methods=['GET'])
+def oracle():
+    btcprice = Blockchain.oracle()
+    
+    if btcprice is None:
+        response = {
+            'message': 'connection error',
+            'node_id': blockchain.node_id
+        }
+        return jsonify(response), 400
+    
+    response = {
+        'btcprice': btcprice,
+        'node_id': blockchain.node_id
+    }
+
+    return jsonify(response), 200
+
 @app.after_request
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
