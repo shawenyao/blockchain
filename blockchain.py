@@ -213,19 +213,12 @@ class Blockchain(object):
 
         for block in chain:
             for transaction in block['block']['transactions']:
-                # if address is already there, add the amount of the original balance
+                # if address is already there, adjust the original balance by the transaction amount
                 # else, create new entry and record the amount
                 # for recipient:
-                if transaction['recipient'] in balances.keys():
-                    balances[transaction['recipient']] += transaction['amount']
-                else:
-                    balances[transaction['recipient']] = transaction['amount']
-                
+                balances[transaction['recipient']] = balances.get(transaction['recipient'], 0) + transaction['amount']
                 # for sender:
-                if transaction['sender'] in balances.keys():
-                    balances[transaction['sender']] -= transaction['amount']
-                else:
-                    balances[transaction['sender']] = -transaction['amount']
+                balances[transaction['sender']] = balances.get(transaction['sender'], 0) - transaction['amount']
         
         for key in balances.keys():
             # round the balance to 8 decimal places
