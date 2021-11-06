@@ -216,9 +216,9 @@ class Blockchain(object):
                 # if address is already there, adjust the original balance by the transaction amount
                 # else, create new entry and record the amount
                 # for recipient:
-                balances[transaction['recipient']] = balances.get(transaction['recipient'], value=0) + transaction['amount']
+                balances[transaction['recipient']] = balances.get(transaction['recipient'], 0) + transaction['amount']
                 # for sender:
-                balances[transaction['sender']] = balances.get(transaction['sender'], value=0) - transaction['amount']
+                balances[transaction['sender']] = balances.get(transaction['sender'], 0) - transaction['amount']
         
         for key in balances.keys():
             # round the balance to 8 decimal places
