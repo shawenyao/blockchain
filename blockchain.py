@@ -133,7 +133,10 @@ class Blockchain(object):
 
         new_node_address = urlparse(address).netloc
         
+        # get node id from node address
         response = requests.get(f'http://{new_node_address}/id')
+
+        # save to my node list
         if response.status_code == 200:
             self.nodes[response.json()['node_id']] = new_node_address
 
