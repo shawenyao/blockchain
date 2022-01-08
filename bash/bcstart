@@ -1,0 +1,2 @@
+echo "nohup python3 -u ~/blockchain/python/server.py $1 $2 > ~bcoutput$1.log &"
+nohup python3 -u ~/blockchain/python/server.py $1 $2 > ~/bcoutput$1.log &

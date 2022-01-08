@@ -1,0 +1,9 @@
+# update permission
+sudo chmod +rwx ~/blockchain/bash/*
+
+# clone htmls
+cd /var/www/html
+sudo git clone https://github.com/shawenyao/web.git
+
+# link dynamic dns (hbschain.us.to)
+curl https://freedns.afraid.org/dynamic/update.php?RkY3NUpvc1lzUWt1emNtY2FXOThWN0dDOjE5OTg3NTk1

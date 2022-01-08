@@ -1,0 +1,40 @@
+# stop existing processes
+~/blockchain/bash/bcstop
+
+# restart apache
+sudo systemctl restart httpd
+
+# link dynamic dns
+curl https://freedns.afraid.org/dynamic/update.php?RkY3NUpvc1lzUWt1emNtY2FXOThWN0dDOjE5OTg3NTk1
+
+# read node ports and ids from the input file
+echo "reading node ids from ~/blockchain/node_ids.csv"
+readarray -t ids < ~/blockchain/node_ids.csv
+
+# start listening
+for((i=0; i<$1; i++))
+do
+    # separate port and id from each row of the input file
+    IFS=',' read -r -a port_and_id <<< "${ids[i]}"
+    ~/blockchain/bash/bcstart ${port_and_id[0]} ${port_and_id[1]}
+done
+
+# wait before start registering nodes
+sleep 5
+
+# register every node on every node
+for((i=0; i<$1; i++))
+do
+    # separate source port and id from each row of the input file
+    IFS=',' read -r -a port_and_id_source <<< "${ids[i]}"
+    for((j=0; j<$1; j++))
+    do
+        # separate destination port and id from each row of the input file
+        IFS=',' read -r -a port_and_id_destination <<< "${ids[j]}"
+        # register new node
+        curl --retry 3 --retry-delay 1 \
+         -X POST -H 'Content-Type: application/json' \
+         -d "{\"nodes\": [\"http://127.0.0.1:${port_and_id_destination[0]}\"]}" \
+         "http://127.0.0.1:${port_and_id_source[0]}/nodes/register"
+    done
+done

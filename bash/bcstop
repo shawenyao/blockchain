@@ -1,0 +1,2 @@
+echo "pkill -f server.py"
+pkill -f server.py
