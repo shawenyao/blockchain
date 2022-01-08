@@ -11,7 +11,8 @@
 2. `git clone https://github.com/shawenyao/blockchain.git`
 3. `cd ~/blockchain`
 4. `sudo bash/deploy`
-5. Edit `/etc/httpd/conf/httpd-le-ssl.conf`:
+5. Follow the guide (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt) to request https certificate of "hbschain.us.to" 
+6. Edit `/etc/httpd/conf/httpd-le-ssl.conf`:
 ```
 <IfModule mod_ssl.c>
 <VirtualHost *:443>
