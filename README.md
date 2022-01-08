@@ -31,7 +31,7 @@
 </VirtualHost>
 </IfModule>
 ```
-6. `bash/bcstartn number_of_nodes`, where the `number_of_nodes` should be replaced by a number
+6. `bash/bcstartn %number_of_nodes%`, where `%number_of_nodes%` should be replaced by a number
 
 ## Architecture
 ![](docs/architecture.png)
