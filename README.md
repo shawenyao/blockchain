@@ -7,10 +7,12 @@
 * `input/node_ids.csv` the input file of node name and port number
 
 ## Instructions
-* `cd ~`
-* `git clone https://github.com/shawenyao/blockchain.git`
-* `cd ~/blockchain`
-* `sudo bash/deploy`
+```
+cd ~
+git clone https://github.com/shawenyao/blockchain.git
+cd ~/blockchain
+sudo bash/deploy
+```
 
 ## Architecture
 ![](docs/architecture.png)
