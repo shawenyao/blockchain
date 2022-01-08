@@ -1,4 +1,4 @@
-# Demo of proof-of-work blockchain
+# Demo of Proof-of-Work Blockchain
 
 ## Overview
 * `bash/deploy` bash script to deploy the demo
