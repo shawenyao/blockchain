@@ -6,13 +6,31 @@
 * `python/server.py` the flask server
 * `input/node_ids.csv` the input file of node name and port number
 
-## Instructions
+## Instructions to Deploy
+1. `cd ~`
+2. `git clone https://github.com/shawenyao/blockchain.git`
+3. `cd ~/blockchain`
+4. `sudo bash/deploy`
+5. Edit `/etc/httpd/conf/httpd-le-ssl.conf`:
 ```
-cd ~
-git clone https://github.com/shawenyao/blockchain.git
-cd ~/blockchain
-sudo bash/deploy
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    DocumentRoot "/var/www/html"
+
+    ServerName "hbschain.us.to"
+    ServerAlias "hbschain.us.to"
+
+    SSLCertificateFile /etc/letsencrypt/live/hbschain.us.to/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/hbschain.us.to/privkey.pem
+
+    RewriteEngine on
+    RewriteRule "^/?(5\d{3})/(.*)" "http://localhost:$1/$2" [P,L,NE]
+
+    Include /etc/letsencrypt/options-ssl-apache.conf
+</VirtualHost>
+</IfModule>
 ```
+6. `bcstartn number_of_nodes`, where the `number_of_nodes` should be replaced by a number
 
 ## Architecture
 ![](docs/architecture.png)
