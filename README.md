@@ -2,6 +2,7 @@
  
 ## Demo of proof-of-work blockchain
 
+* `deploy` bash script to deploy the demo
 * `python/blockchain.py` the blockchain class and functions
 * `python/server.py` the flask server
 * `input/node_ids.csv` the input file of node name and port number
