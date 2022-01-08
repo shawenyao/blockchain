@@ -6,12 +6,12 @@
 * `python/server.py` the flask server
 * `input/node_ids.csv` the input file of node name and port number
 
-## Instructions to Deploy
+## Instructions to Deploy on an AWS EC2 Instance
 1. `cd ~`
 2. `git clone https://github.com/shawenyao/blockchain.git`
 3. `cd ~/blockchain`
 4. `sudo bash/deploy`
-5. Follow the guide (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt) to request https certificate of "hbschain.us.to" 
+5. Follow the guide (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt) to request https certificate of `hbschain.us.to` 
 6. Edit `/etc/httpd/conf/httpd-le-ssl.conf`:
 ```
 <IfModule mod_ssl.c>
@@ -31,7 +31,7 @@
 </VirtualHost>
 </IfModule>
 ```
-6. `bcstartn number_of_nodes`, where the `number_of_nodes` should be replaced by a number
+6. `bash/bcstartn %number_of_nodes%`, where `%number_of_nodes%` should be replaced by a number
 
 ## Architecture
 ![](docs/architecture.png)
