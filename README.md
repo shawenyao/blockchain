@@ -6,7 +6,7 @@
 * `python/server.py` the flask server
 * `input/node_ids.csv` the input file of node name and port number
 
-## Instructions to Deploy
+## Instructions to Deploy on an AWS EC2 Instance
 1. `cd ~`
 2. `git clone https://github.com/shawenyao/blockchain.git`
 3. `cd ~/blockchain`
