@@ -17,7 +17,7 @@ class Blockchain(object):
         self.chain = []
         # the next block to be forged but not yet finalized
         self.tentative_block = {}
-        # the set of neighbouring nodes
+        # the set of all peer nodes
         self.nodes = {}
         # the difficulty of mining
         self.difficulty = difficulty

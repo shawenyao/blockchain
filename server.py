@@ -5,9 +5,10 @@ from waitress import serve
 import logging
 import sys
 
-# instantiate our Node
+# instantiate this node
 app = Flask(__name__)
 
+# identify this node
 @app.route('/id', methods=['GET'])
 def id():
     response = {
@@ -16,6 +17,7 @@ def id():
 
     return jsonify(response), 200
 
+# mine a new block
 @app.route('/mine', methods=['GET'])
 def mine():
     # we run the proof of work algorithm to get the next nonce
@@ -30,6 +32,7 @@ def mine():
 
     return jsonify(response), 200
 
+# register a new peer node
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
     nodes = request.get_json().get('nodes')
@@ -49,6 +52,7 @@ def register_nodes():
 
     return jsonify(response), 200
 
+# find the consensus across all peer nodes
 @app.route('/nodes/resolve', methods=['GET'])
 def consensus():
     replaced = blockchain.resolve_conflicts()
@@ -65,6 +69,7 @@ def consensus():
 
     return jsonify(response), 200
 
+# update the local difficulty
 @app.route('/difficulty/update', methods=['GET'])
 def update_difficulty():
     difficulty = request.args.get('difficulty')
@@ -89,6 +94,7 @@ def update_difficulty():
 
     return jsonify(response), 200
 
+# broadcast the difficulty across all nodes
 @app.route('/difficulty/broadcast', methods=['GET'])
 def broadcast_difficulty():
     difficulty = int(request.args.get('difficulty'))
@@ -103,6 +109,7 @@ def broadcast_difficulty():
 
     return jsonify(response), 200
 
+# initiate a new transaction locally
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
     values = request.get_json()
@@ -123,6 +130,7 @@ def new_transaction():
 
     return jsonify(response), 200
 
+# broadcast the transaction across all nodes
 @app.route('/transactions/broadcast', methods=['POST'])
 def broadcast_transaction():
     values = request.get_json()
@@ -143,6 +151,7 @@ def broadcast_transaction():
 
     return jsonify(response), 200
 
+# see the list of pending transactions
 @app.route('/transactions/pending', methods=['GET'])
 def pending_transactions():
     response = {
@@ -153,6 +162,7 @@ def pending_transactions():
 
     return jsonify(response), 200
 
+# see the full blockchain
 @app.route('/chain', methods=['GET'])
 def full_chain():
     response = {
@@ -164,6 +174,7 @@ def full_chain():
 
     return jsonify(response), 200
 
+# see the account balance for each user
 @app.route('/utxo', methods=['GET'])
 def utxo():
     response = {
@@ -173,6 +184,7 @@ def utxo():
 
     return jsonify(response), 200
 
+# pull off-chain information (bitcoin price)
 @app.route('/oracle', methods=['GET'])
 def oracle():
     btcprice = Blockchain.oracle()
@@ -191,6 +203,7 @@ def oracle():
 
     return jsonify(response), 200
 
+# allow queries from all origins
 @app.after_request
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
@@ -218,4 +231,5 @@ if __name__ == '__main__':
     logger = logging.getLogger('waitress')
     logger.setLevel(logging.DEBUG)
     
+    # start serving the app
     serve(app, host="0.0.0.0", port=port)
