@@ -1,11 +1,13 @@
-# blockchain
- 
-## Demo of proof-of-work blockchain
+# Demo of proof-of-work blockchain
 
+## Overview
 * `deploy` bash script to deploy the demo
 * `python/blockchain.py` the blockchain class and functions
 * `python/server.py` the flask server
 * `input/node_ids.csv` the input file of node name and port number
+
+## Instructions
+`sudo deploy`
 
 ## Architecture
 ![](docs/architecture.png)
