@@ -4,7 +4,7 @@
 * `bash/deploy` bash script to deploy the demo
 * `python/blockchain.py` the blockchain class and functions
 * `python/server.py` the flask server
-* `input/node_ids.csv` the input file of node name and port number
+* `input/node_ids.csv` the input file of port number and node id
 
 ## Instructions to Deploy on an AWS EC2 Instance
 1. `cd ~`
