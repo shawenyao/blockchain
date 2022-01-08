@@ -8,7 +8,7 @@
 * `input/node_ids.csv` the input file of node name and port number
 
 ## Architecture
-![](architecture.png)
+![](docs/architecture.png)
 
 ## References
 Learn Blockchains by Building One
