@@ -7,7 +7,8 @@
 * `input/node_ids.csv` the input file of node name and port number
 
 ## Instructions
-* clone the repository to the user folder
+* `cd ~`
+* `git clone https://github.com/shawenyao/blockchain.git`
 * `cd ~/blockchain`
 * `sudo bash/deploy`
 
