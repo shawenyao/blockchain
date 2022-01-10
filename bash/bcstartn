@@ -8,8 +8,8 @@ sudo systemctl restart httpd
 curl https://freedns.afraid.org/dynamic/update.php?RkY3NUpvc1lzUWt1emNtY2FXOThWN0dDOjE5OTg3NTk1
 
 # read node ports and ids from the input file
-echo "reading node ids from ~/blockchain/node_ids.csv"
-readarray -t ids < ~/blockchain/node_ids.csv
+echo "reading node ids from ~/blockchain/input/node_ids.csv"
+readarray -t ids < ~/blockchain/input/node_ids.csv
 
 # start listening
 for((i=0; i<$1; i++))
