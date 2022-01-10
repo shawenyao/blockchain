@@ -1,6 +1,3 @@
-# update permission
-sudo chmod +rwx ~/blockchain/bash/*
-
 # clone htmls
 cd /var/www/html
 sudo git clone https://github.com/shawenyao/web.git
