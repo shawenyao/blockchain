@@ -30,7 +30,7 @@
 </VirtualHost>
 </IfModule>
 ```
-6. `bash/bcstartn %number_of_nodes%`, where `%number_of_nodes%` should be replaced by a number no bigger than the number of rows in `input/node_ids.csv`
+6. `~/blockchain/bash/bcstartn %number_of_nodes%`, where `%number_of_nodes%` should be replaced by a number no bigger than the number of rows in `input/node_ids.csv`
 
 ## Architecture
 ![](docs/architecture.png)
