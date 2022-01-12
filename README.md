@@ -16,8 +16,8 @@
 5. Follow the guide (https://certbot.eff.org/) to request https certificate for the domain.
 6. Add the following lines to `/etc/nginx/sites-available/default`:
 ```
-location ~ "^/(5\d{3})/(.*)$" {
-   proxy_pass http://0.0.0.0:$1/$2;
+location ~ "^/(5[\d]{3})/(.*)$" {
+   proxy_pass http://0.0.0.0:$1/$2$is_args$args;
 }
 ```
 6. `~/blockchain/bash/bcstartn %number_of_nodes%`, where `%number_of_nodes%` should be replaced by a number no bigger than the number of rows in `input/node_ids.csv`
