@@ -16,7 +16,7 @@
 5. Follow the guide (https://certbot.eff.org/) to request https certificate for the domain.
 6. Add the following lines to `/etc/nginx/sites-available/default`:
 ```
-location ~ "^/(5[\d]{3})/(.*)$" {
+location ~ "^/(5\d{3})/(.*)$" {
    proxy_pass http://0.0.0.0:$1/$2;
 }
 ```
