@@ -3,3 +3,12 @@ cd /var/www/html
 sudo git clone https://github.com/shawenyao/web.git
 sudo mv web/* .
 sudo rm -r web
+
+# nginx
+sudo apt install nginx
+
+# python libraries
+sudo apt install python3-pip
+pip3 install flask
+pip3 install waitress
+pip3 install pytz

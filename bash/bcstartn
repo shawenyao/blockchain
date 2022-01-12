@@ -2,7 +2,7 @@
 ~/blockchain/bash/bcstop
 
 # restart apache
-sudo systemctl restart httpd
+sudo systemctl restart nginx
 
 # link dynamic dns
 curl https://freedns.afraid.org/dynamic/update.php?RkY3NUpvc1lzUWt1emNtY2FXOThWN0dDOjE5OTg3NTk1
