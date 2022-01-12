@@ -10,7 +10,7 @@
 1. `cd ~`
 2. `git clone https://github.com/shawenyao/blockchain.git`
 3. `curl https://freedns.afraid.org/dynamic/update.php?xxxxxxxxxx`
-4. Follow the guide (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt) to request https certificate of `hbschain.us.to` 
+4. Follow the guide (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt or https://certbot.eff.org/, depending on system) to request https certificate of `hbschain.us.to` 
 5. `sudo ~/blockchain/bash/deploy`
 6. Edit `/etc/httpd/conf/httpd-le-ssl.conf`:
 ```
