@@ -2,6 +2,8 @@
 
 ## Overview
 * `bash/deploy` bash script to deploy the demo
+* `bash/bcstartn` bash script to start the demo
+* `bash/bcstop` bash script to stop the demo
 * `python/blockchain.py` the blockchain class and functions
 * `python/server.py` the flask server
 * `input/node_ids.csv` the input file of port number and node id
