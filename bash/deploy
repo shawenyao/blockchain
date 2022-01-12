@@ -1,8 +1,6 @@
 # clone htmls
 cd /var/www/html
-sudo git clone https://github.com/shawenyao/web.git
-sudo mv web/* .
-sudo rm -r web
+sudo git clone https://github.com/shawenyao/web.git .
 
 # nginx
 sudo apt install nginx
