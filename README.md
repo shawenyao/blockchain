@@ -12,10 +12,11 @@
 3. `curl https://freedns.afraid.org/dynamic/update.php?xxxxxxxxxx`
 4. Follow the guide (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt or https://certbot.eff.org/, depending on system) to request https certificate of `hbschain.us.to` 
 5. `sudo ~/blockchain/bash/deploy`
-6. Add the following two lines to `/etc/httpd/conf/httpd-le-ssl.conf` or `/etc/apache2/sites-enabled/000-default-le-ssl.conf`, depending on system:
+6. Add the following lines to `/etc/nginx/sites-available/default`:
 ```
-RewriteEngine on
-RewriteRule "^/?(5\d{3})/(.*)" "http://localhost:$1/$2" [P,L,NE]
+location ~ "^/(5[\d]{3})/(.*)$" {
+   proxy_pass http://0.0.0.0:$1/$2;
+}
 ```
 6. `~/blockchain/bash/bcstartn %number_of_nodes%`, where `%number_of_nodes%` should be replaced by a number no bigger than the number of rows in `input/node_ids.csv`
 
