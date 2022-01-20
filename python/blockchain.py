@@ -186,15 +186,15 @@ class Blockchain(object):
     def new_transaction(self, sender, recipient, amount):
         """
         create a new transaction to go into the next mined block
-        :param sender: <str> address of the Sender
-        :param recipient: <str> address of the recipient
+        :param sender: <str> node id of the sender
+        :param recipient: <str> node id of the recipient
         :param amount: <float> amount
-        :return: <int> the index of the Block that will hold this transaction
+        :return: <dict> this transaction
         """
         self.pending_transactions.append({
             'sender': sender,
             'recipient': recipient,
-            'amount': amount,
+            'amount': amount
         })
 
         return self.pending_transactions[-1]
@@ -212,14 +212,14 @@ class Blockchain(object):
     @staticmethod
     def utxo(chain):
         """
-        calculate balance for each address from transaction history
+        calculate balance for each node id from transaction history
         :return: <dict> unspent transaction output
         """
         balances = {}
 
         for block in chain:
             for transaction in block['block']['transactions']:
-                # if address is already there, adjust the original balance by the transaction amount
+                # if node id is already there, adjust the original balance by the transaction amount
                 # else, create new entry and record the amount
                 # for recipient:
                 balances[transaction['recipient']] = balances.get(transaction['recipient'], 0) + transaction['amount']
