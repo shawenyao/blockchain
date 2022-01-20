@@ -33,7 +33,7 @@ class Blockchain(object):
         """
         create a new block in the blockchain
         :param nonce: <int> the nonce given by the proof of work algorithm
-        :return: <dict> new vlock
+        :return: <dict> the newly minted bvlock
         """
 
         # set the nonce given by the proof of work algorithm
@@ -109,7 +109,7 @@ class Blockchain(object):
                 'transactions': [self.pending_transactions[i] for i in index_valid_transactions] + [reward],
                 'previous_hash': previous_hash or self.last_block['hash']
             },
-            'hash': '',
+            'hash': ''
         }
         
         # if previous_hash is provided (i.e., genesis block), use hard-coded nonce (pre-solved)
