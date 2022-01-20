@@ -29,7 +29,7 @@ class Blockchain(object):
         # where previous hash is hard-coded
         self.proof_of_work(previous_hash='[note: previous hash is not applicable in the case of genesis block]')
 
-    def new_block(self, nonce):
+    def new_block(self, nonce, index_valid_transactions):
         """
         create a new block in the blockchain
         :param nonce: <int> the nonce given by the proof of work algorithm
@@ -47,8 +47,8 @@ class Blockchain(object):
         # increase effort of the chain
         self.effort += 16 ** (self.tentative_block['block']['difficulty']-1)
 
-        # reset the current list of pending transactions
-        self.pending_transactions = []
+        # currently invalid (unprocessed) transactions becomes the new list of pending transactions
+        self.pending_transactions = [transaction for (i, transaction) in enumerate(self.pending_transactions) if i not in index_valid_transactions]
         # reset the next block to be forged
         self.tentative_block = {}        
 
@@ -59,11 +59,12 @@ class Blockchain(object):
         """
         after each transaction, all accounts should have non-negative balances
         otherwise, reject the transction
-        :return: <dict> valid transactions
+        :return: <list> index of valid transactions
         """
+        index_valid_transactions = []
         valid_transactions = []
 
-        for transaction in self.pending_transactions:
+        for i, transaction in enumerate(self.pending_transactions):
             new_block = {
                 'block': {
                     'transactions': valid_transactions + [transaction]
@@ -72,9 +73,10 @@ class Blockchain(object):
             balances = Blockchain.utxo(self.chain + [new_block])
             del balances['0']
             if all(value >= 0 for value in balances.values()):
+                index_valid_transactions.append(i)
                 valid_transactions.append(transaction)
         
-        return valid_transactions
+        return index_valid_transactions
 
     def proof_of_work(self, previous_hash=None):
         """
@@ -83,7 +85,7 @@ class Blockchain(object):
         :return: <dict> the newly minted block 
         """
         # validate transactions
-        valid_transactions = self.get_valid_transactions()
+        index_valid_transactions = self.get_valid_transactions()
 
         # block reward (aka coinbase)
         # will become finalized if the block is properly appended to the chain
@@ -103,8 +105,8 @@ class Blockchain(object):
                 # if previous_hash is provided (i.e., genesis block), use hard-coded timestamp
                 'timestamp': datetime(2009, 1, 3, 13, 15).strftime('%b %d, %Y %H:%M:%S %p ET')\
                      if previous_hash else datetime.now(timezone('US/Eastern')).strftime('%b %d, %Y %H:%M:%S %p ET'),
-                # block reward appended to the current list of pending transactions
-                'transactions': valid_transactions + [reward],
+                # block reward appended to the current list of valid pending transactions
+                'transactions': [self.pending_transactions[i] for i in index_valid_transactions] + [reward],
                 'previous_hash': previous_hash or self.last_block['hash']
             },
             'hash': '',
@@ -114,14 +116,15 @@ class Blockchain(object):
         if previous_hash:
             nonce = 1443031394
         else:
-            # find the nonce such that hash(block(nonce)) contains several leading zeros
+            # find the nonce such that hash(block(nonce)) contains the required number of leading zeros
             nonce = random.randint(0, 2147483647)
             while Blockchain.valid_proof(self.tentative_block, nonce, self.tentative_block['block']['difficulty']) is False:
                 # next guess
                 nonce += 1
 
         # after finding the solution, add the block to chain
-        block = self.new_block(nonce)
+        # the invalid transactions will back to pending state
+        block = self.new_block(nonce, index_valid_transactions)
 
         return block
 
