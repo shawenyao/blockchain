@@ -71,7 +71,11 @@ class Blockchain(object):
                 }
             }
             balances = Blockchain.utxo(self.chain + [new_block])
+
+            # the system ('0') is allowed to have negative balance so remove it from validation
             del balances['0']
+
+            # if all other accounts has non-negative balance after the transaction
             if all(value >= 0 for value in balances.values()):
                 index_valid_transactions.append(i)
                 valid_transactions.append(transaction)
@@ -88,10 +92,10 @@ class Blockchain(object):
         index_valid_transactions = self.get_valid_transactions()
 
         # block reward (aka coinbase)
-        # will become finalized if the block is properly appended to the chain
+        # will become finalized when the computational puzzle is solved
         # if previous_hash is provided (i.e., genesis block), use hard-coded recipient
         reward = {
-            'sender': '0',
+            'sender': '0', # '0' means the system (money supply)
             'recipient': 'satoshi' if previous_hash else self.node_id,
             'amount': 1
         }
