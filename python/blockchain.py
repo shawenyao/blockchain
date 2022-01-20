@@ -50,7 +50,7 @@ class Blockchain(object):
         # currently invalid (unprocessed) transactions becomes the new list of pending transactions
         self.pending_transactions = [transaction for (i, transaction) in enumerate(self.pending_transactions) if i not in index_valid_transactions]
         # reset the next block to be forged
-        self.tentative_block = {}        
+        # self.tentative_block = {}
 
         # return the newly-created block
         return self.last_block
