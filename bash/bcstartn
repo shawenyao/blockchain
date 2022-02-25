@@ -5,7 +5,7 @@
 sudo systemctl restart nginx
 
 # link dynamic dns
-curl https://freedns.afraid.org/dynamic/update.php?RkY3NUpvc1lzUWt1emNtY2FXOThWN0dDOjE5OTg3NTk1
+# curl https://freedns.afraid.org/dynamic/update.php?xxxxxx
 
 # read node ports and ids from the input file
 echo "reading node ids from ~/blockchain/input/node_ids.csv"
