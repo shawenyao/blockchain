@@ -1,5 +1,6 @@
 # clone htmls
 cd /var/www/html
+sudo rm -r *
 sudo git clone https://github.com/shawenyao/web.git .
 cd ~
 
