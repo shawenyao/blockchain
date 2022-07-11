@@ -271,7 +271,7 @@ class Blockchain(object):
         get btc to usd price from yahoo finance
         :return: <float>
         """
-        headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         response = requests.get('http://query1.finance.yahoo.com/v6/finance/quote?region=US&lang=en&symbols=BTC-USD', headers=headers)
 
         if response.status_code == 200:
