@@ -146,6 +146,8 @@ class Blockchain(object):
         # save to my node list
         if response.status_code == 200:
             self.nodes[response.json()['node_id']] = new_node_address
+        
+        response.close()
 
     def resolve_conflicts(self):
         """
@@ -172,6 +174,8 @@ class Blockchain(object):
                     authoritative_node = node
                     max_effort = effort
                     new_chain = chain
+                
+            response_chain.close()
 
         # replace our chain if we discovered a new, valid chain that took more effort to build than ours
         if new_chain:
@@ -182,6 +186,7 @@ class Blockchain(object):
             response_pending_transactions = requests.get(f'http://{authoritative_node}/transactions/pending')
             if response_pending_transactions.status_code == 200:
                 self.pending_transactions = response_pending_transactions.json()['pending_transactions']
+            response_pending_transactions.close()
             
             return True
 
@@ -206,12 +211,13 @@ class Blockchain(object):
     def broadcast_transaction(self, sender, recipient, amount):
         for node in self.nodes.values():
             requests.post(f'http://{node}/transactions/new', json={'sender': sender, 'recipient': recipient, 'amount': amount})
-
+            requests.close()
         return {'sender': sender, 'recipient': recipient, 'amount': amount}
     
     def broadcast_difficulty(self, difficulty):
         for node in self.nodes.values():
-            requests.get(f'http://{node}/difficulty/update?difficulty={difficulty}')
+            response = requests.get(f'http://{node}/difficulty/update?difficulty={difficulty}')
+            response.close()
     
     @staticmethod
     def utxo(chain):
@@ -278,6 +284,8 @@ class Blockchain(object):
             btcprice = response.json()['quoteResponse']['result'][0]['regularMarketPrice']
         else:
             btcprice = None
+        
+        response.close()
         
         return btcprice
 
