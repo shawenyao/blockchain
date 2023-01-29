@@ -186,6 +186,7 @@ class Blockchain(object):
             response_pending_transactions = requests.get(f'http://{authoritative_node}/transactions/pending')
             if response_pending_transactions.status_code == 200:
                 self.pending_transactions = response_pending_transactions.json()['pending_transactions']
+            
             response_pending_transactions.close()
             
             return True
@@ -212,6 +213,7 @@ class Blockchain(object):
         for node in self.nodes.values():
             requests.post(f'http://{node}/transactions/new', json={'sender': sender, 'recipient': recipient, 'amount': amount})
             requests.close()
+        
         return {'sender': sender, 'recipient': recipient, 'amount': amount}
     
     def broadcast_difficulty(self, difficulty):
